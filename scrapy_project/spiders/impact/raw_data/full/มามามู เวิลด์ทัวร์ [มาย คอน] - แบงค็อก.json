@@ -1,0 +1,23 @@
+{
+    "title": "มามามู เวิลด์ทัวร์ [มาย คอน] - แบงค็อก",
+    "description": "เวิลด์ทัวร์คอนเสิร์ตเต็มรูปแบบครั้งแรกของมามามู นับจากเดบิวต์ตั้งแต่ปี 2014 บัตรราคา 6,900 (VIP) / 5,500 / 4,500 / 3,000 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "29 มกราคม 2023",
+    "end_date": "29 มกราคม 2023",
+    "event_slot_time": "17:00",
+    "location": "Impact Hall 5",
+    "url": "https://www.facebook.com/dshowthailand",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3000,
+        4500,
+        5500,
+        6900
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2023/01-13-mamamoo-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:20",
+    "status": "past"
+}

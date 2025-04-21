@@ -1,0 +1,20 @@
+{
+    "title": "bodyslam นับ 1 ถึง 7 คอนเสิร์ต",
+    "description": "คอนเสิร์ตครั้งพิเศษ ของทุกอัลบั้ม ของทุกคน ของพวกเราบอดี้สแลม \r\nซื้อบัตรได้ที่ Counter Service All Ticket ในร้าน 7-Eleven ทุกสาขาทั่วประเทศ และบนเว็บ www.allticket.com \r\n#bodyslamนับ1ถึง7 \r\n* รับ Boxset ของที่ระลึกพิเศษพร้อมลายเซ็น ที่จัดทำขึ้นเพื่องานนี้โดยเฉพาะ (ไม่มีขายหน้างาน) \r\n** รายได้ทุกบาทจากการจำหน่ายบัตร มอบให้มูลนิธิธรรมาภิบาลทางการแพทย์ เพื่อส่งต่อไปยัง รพ.รัฐที่ขาดแคลน จัดโดย ปธพ. รุ่น 1 ถึง 7 บัตรราคา 5,500 (วีไอพี) / 2,500 / 1,500 (ยืน) / 1,000 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "25 มกราคม 2020",
+    "end_date": "26 มกราคม 2020",
+    "event_slot_time": "18:00",
+    "location": "Impact Arena",
+    "url": "http://www.allticket.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        5500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2019/11-08-bodyslam-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:13:59",
+    "status": "past"
+}

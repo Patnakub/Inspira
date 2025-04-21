@@ -1,0 +1,24 @@
+{
+    "title": "เอ็นมิกซ์ โชว์เคสทัวร์ ไนซ์ทูมีทยู อิน แบงค็อก",
+    "description": "บัตรราคา 4,800 - VVIP Package (seating) / 4,300 - VIP Package (seating) / 3,800 / 3,300 / 2,300 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "04 มิถุนายน 2023",
+    "end_date": "04 มิถุนายน 2023",
+    "event_slot_time": "17:00",
+    "location": "Impact Hall 5-6",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/56554/",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        2300,
+        3300,
+        3800,
+        4300,
+        4800
+    ],
+    "cover_picture": "null",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:24",
+    "status": "past"
+}

@@ -1,0 +1,27 @@
+{
+    "title": "2023 iKON WORLD TOUR TAKEOFF_BKK",
+    "description": "ราคาบัตร :  6900 / 6500 / 5800 / 5000 / 4300 / 3500 / 2900 บาท",
+    "categories": [
+        "Concert",
+        "Others"
+    ],
+    "start_date": "29 กรกฎาคม 2023",
+    "end_date": "29 กรกฎาคม 2023",
+    "event_slot_time": "18:00",
+    "location": "Impact Hall 5",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/56775/2023-ikon-world-tour-takeoff-bkk",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        2900,
+        3500,
+        4300,
+        5000,
+        5800,
+        6500,
+        6900
+    ],
+    "cover_picture": "null",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:25",
+    "status": "past"
+}

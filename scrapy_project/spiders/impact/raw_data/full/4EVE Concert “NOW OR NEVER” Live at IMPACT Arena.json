@@ -1,0 +1,25 @@
+{
+    "title": "4EVE Concert “NOW OR NEVER” Live at IMPACT Arena",
+    "description": "คอนเสิร์ตใหญ่ครั้งที่ 2 ของ 4EVE วงเกิร์ลกรุป ที่กำลังมาแรงในวงการ \r\nยกความสนุกมาบุกถึง IMPACT Arena อลังการงานโชว์ จัดเต็มแสงสีเสียง ครบทุกอรรถรส \r\nรับประกันความสนุก ความมัน และความประทับใจ ไม่แพ้คอนเสิร์ตครั้งแรกที่ผ่านมา แน่นอน บัตรราคา: 5,000 / 4,500 / 4,000 / 3,500 / 3,000 / 2,500 / 2,000 / 1,500 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "10 กุมภาพันธ์ 2024",
+    "end_date": "10 กุมภาพันธ์ 2024",
+    "event_slot_time": "18:30 - 22:00",
+    "location": "Impact Arena",
+    "url": "https://www.facebook.com/4EVEofficial",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1500,
+        3000,
+        3500,
+        4000,
+        4500,
+        5000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/01-22-4eve-nowornever-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:32",
+    "status": "past"
+}

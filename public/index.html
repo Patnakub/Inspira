@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inspira - Welcome</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+    }
+
+    .slideshow {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+    }
+
+    .slideshow img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .slideshow img.active {
+      opacity: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      text-align: center;
+      padding-bottom: 60px;
+      color: white;
+    }
+
+    h1 { font-size: 36px; font-weight: bold; }
+    h2 { font-size: 22px; font-style: italic; margin-top: 5px; }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 10px;
+    }
+
+    .enter-btn {
+      background-color: #fca5a5;
+      color: white;
+    }
+
+    .secondary-btn {
+      background-color: #cbd5e1;
+      color: #1e293b;
+    }
+
+    .dots {
+      font-size: 22px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slideshow" id="slideshow"></div>
+
+  <div class="content">
+    <div>
+      <h1>Inspira</h1>
+      <h2>Discover exhibitions and events happening around you.</h2>
+    </div>
+    <button class="btn enter-btn" onclick="window.location.href='home.html'">CLICK TO ENTER</button>
+    <div>
+      <button class="btn secondary-btn" onclick="window.location.href='login.html'">LOG IN</button>
+      <button class="btn secondary-btn" onclick="window.location.href='register.html'">REGISTER</button>
+    </div>
+  </div>
+
+  <script>
+    async function loadOngoingImages() {
+      try {
+        const response = await fetch("http://localhost:5000/exhibitions/ongoing");
+        const data = await response.json();
+        console.log("📦 ได้ข้อมูล:", data);
+  
+        const coverUrls = data
+          .map(item => item.cover_picture)
+          .filter(url => url && url.startsWith("http"));
+  
+        console.log("🖼️ รูปทั้งหมดก่อนโหลดจริง:", coverUrls);
+  
+        const container = document.getElementById("slideshow");
+        let currentIndex = 0;
+        let slideshowStarted = false;
+        const imageElements = []; // ✅ เก็บรูปที่โหลดสำเร็จ
+
+        for (const url of coverUrls) {
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "slide";
+        img.style.display = "block";
+
+        img.onload = () => {
+            img.classList.add("slide");
+
+            if (container.children.length === 0) {
+            img.classList.add("active"); // ✅ แสดงภาพแรก
+            }
+
+            container.appendChild(img);
+            imageElements.push(img); // ✅ เพิ่มภาพลง array ที่ใช้สลับภาพ
+
+            if (imageElements.length >= 2 && !slideshowStarted) {
+            slideshowStarted = true;
+
+            setInterval(() => {
+                imageElements[currentIndex].classList.remove("active");
+                currentIndex = (currentIndex + 1) % imageElements.length;
+                imageElements[currentIndex].classList.add("active");
+            }, 3000);
+            }
+        };
+
+        img.onerror = () => {
+            console.warn("❌ โหลดภาพไม่ได้:", url);
+        };
+        }
+        
+      } catch (err) {
+        console.error("🔥 ดึงข้อมูลผิดพลาด:", err);
+      }
+    }
+  
+    loadOngoingImages();
+  </script>
+  
+</body>
+</html>

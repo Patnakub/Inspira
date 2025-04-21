@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>เสนอชื่อนิทรรศการ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to bottom right, #f8d1dc, #cbdcf4);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 450px;
+      margin: 50px auto;
+      background-color: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #345;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    input[type="file"] {
+      padding: 4px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      background-color: #4a63f3;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .back {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .back a {
+      text-decoration: none;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Refer</h2>
+    <form id="suggestForm" enctype="multipart/form-data">
+      <label>Name *</label>
+      <input type="text" id="title" required>
+
+      <label>Location *</label>
+      <input type="text" id="location" required>
+
+      <label>Start Date *</label>
+      <input type="date" id="start_date" required>
+
+      <label>End Date</label>
+      <input type="date" id="end_date">
+
+      <label>Event Start Time</label>
+      <input type="time" id="event_time_start">
+
+      <label>Event End Time</label>
+      <input type="time" id="event_time_end">
+
+      <label>Primary Category</label>
+      <select id="primary_category"></select>
+
+      <label>Secondary Category</label>
+      <select id="secondary_category">
+        <option value="">-- ไม่เลือกก็ได้ --</option>
+      </select>
+
+      <label>Description *</label>
+      <textarea id="description" rows="4" required></textarea>
+
+      <div>
+        <label>ค่าเข้าชม</label>
+        <select id="ticket" name="ticket" onchange="toggleTicketInput()">
+            <option value="ไม่มีค่าเข้าชม" selected>ไม่มีค่าเข้าชม</option>
+            <option value="มีค่าเข้าชม">มีค่าเข้าชม</option>
+          </select>
+      </div>
+
+      <div id="ticketPriceContainer" style="display: none; margin-top: 10px;">
+        <label>ราคาบัตร (คั่นด้วย , เช่น 100,200,300)</label>
+        <input type="text" id="ticket_price" name="ticket_price" placeholder="กรอกราคา เช่น 100,200,300">
+      </div>
+
+
+      <label>Latitude</label>
+      <input type="number" step="any" id="latitude">
+
+      <label>Longitude</label>
+      <input type="number" step="any" id="longitude">
+
+      <label>Picture *</label>
+      <input type="file" id="image" accept="image/*" required>
+
+      <button type="submit">Refer</button>
+    </form>
+
+    <div class="back">
+      <a href="home.html">← กลับหน้าหลัก</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleTicketInput() {
+      const selected = document.getElementById('ticket').value;
+      document.getElementById('ticketPriceContainer').style.display = selected === "มีค่าเข้าชม" ? "block" : "none";
+    }
+
+    async function loadCategories() {
+      try {
+
+        const res = await fetch("http://localhost:5000/categories");
+        const categories = await res.json();
+
+        const primarySelect = document.getElementById("primary_category");
+        const secondarySelect = document.getElementById("secondary_category");
+
+        primarySelect.innerHTML = '<option value="">-- เลือกหมวดหมู่หลัก --</option>';
+        secondarySelect.innerHTML = '<option value="">-- ไม่เลือกก็ได้ --</option>';
+
+        categories.forEach(cat => {
+          const option1 = document.createElement("option");
+          option1.value = cat.name;
+          option1.textContent = cat.name;
+          primarySelect.appendChild(option1);
+
+          const option2 = document.createElement("option");
+          option2.value = cat.name;
+          option2.textContent = cat.name;
+          secondarySelect.appendChild(option2);
+        });
+      } catch (err) {
+        console.error("❌ โหลดหมวดหมู่ไม่สำเร็จ", err);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadCategories);
+
+    document.getElementById("suggestForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const requiredFields = [
+        { id: "title", name: "ชื่อ" },
+        { id: "location", name: "สถานที่" },
+        { id: "start_date", name: "วันที่เริ่มต้น" },
+        { id: "description", name: "รายละเอียด" },
+        { id: "primary_category", name: "หมวดหมู่หลัก" },
+        { id: "image", name: "รูปภาพ" },
+        ];
+
+        for (const field of requiredFields) {
+        const el = document.getElementById(field.id);
+        if (
+            (el.type === "file" && el.files.length === 0) || // สำหรับรูป
+            (el.type !== "file" && !el.value.trim())
+        ) {
+            alert(`❌ กรุณากรอกข้อมูล ${field.name}`);
+            el.focus();
+            return;
+        }
+        }
+
+      const startDate = new Date(document.getElementById("start_date").value);
+      const endDateRaw = document.getElementById("end_date").value;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (startDate < today) {
+        alert("❌ วันที่เริ่มต้นต้องไม่น้อยกว่าวันปัจจุบัน");
+        return;
+      }
+
+      if (endDateRaw) {
+        const endDate = new Date(endDateRaw);
+        if (startDate > endDate) {
+          alert("❌ วันที่เริ่มต้นต้องไม่เกินวันที่สิ้นสุด");
+          return;
+        }
+      }
+
+      const timeStart = document.getElementById("event_time_start").value;
+        const timeEnd = document.getElementById("event_time_end").value;
+
+        // ✅ ตรวจสอบว่าเวลาสิ้นสุดไม่น้อยกว่าเวลาเริ่ม
+        if (timeStart && timeEnd) {
+        const [startHour, startMinute] = timeStart.split(":").map(Number);
+        const [endHour, endMinute] = timeEnd.split(":").map(Number);
+
+        const start = startHour * 60 + startMinute;
+        const end = endHour * 60 + endMinute;
+
+        if (end <= start) {
+            alert("❌ เวลาสิ้นสุดต้องมากกว่าเวลาเริ่มต้น");
+            return;
+        }
+        }
+
+        let eventSlot = "";
+        if (timeStart && timeEnd) {
+        eventSlot = `${timeStart}-${timeEnd}`;
+        } else if (timeStart) {
+        eventSlot = timeStart;
+        }
+
+
+      const cat1 = document.getElementById("primary_category").value;
+      const cat2 = document.getElementById("secondary_category").value;
+      let categories = [];
+      if (cat1 && cat2 && cat1 !== cat2) {
+        categories = [cat1, cat2];
+      } else if (cat1) {
+        categories = [cat1];
+      }
+
+      const formData = new FormData();
+      formData.append("title", document.getElementById("title").value.trim());
+      formData.append("location", document.getElementById("location").value.trim());
+      formData.append("start_date", document.getElementById("start_date").value);
+      formData.append("end_date", endDateRaw);
+      formData.append("event_slot_time", eventSlot);
+      formData.append("description", document.getElementById("description").value.trim());
+      formData.append("latitude", document.getElementById("latitude").value);
+      formData.append("longitude", document.getElementById("longitude").value);
+      categories.forEach(cat => formData.append("categories[]", cat));
+
+      const ticket = document.getElementById("ticket").value;
+      formData.append("ticket", ticket);
+
+      if (ticket === "มีค่าเข้าชม") {
+        const ticketPrice = document.getElementById("ticket_price").value.trim();
+        formData.append("ticket_price", ticketPrice);
+      }
+
+      const image = document.getElementById("image").files[0];
+      if (!image) {
+        alert("กรุณาเลือกรูปภาพ");
+        return;
+      }
+      formData.append("image", image);
+
+      const token = localStorage.getItem("token");
+        if (!token) {
+          alert("❌ กรุณาเข้าสู่ระบบก่อนเสนอชื่อนิทรรศการ");
+          return;
+        }
+
+      try {
+        const res = await fetch("http://localhost:5000/suggestions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ ส่งข้อมูลเรียบร้อยแล้ว");
+          document.getElementById("suggestForm").reset();
+        } else {
+          alert("❌ ส่งไม่สำเร็จ: " + (data.error || "เกิดข้อผิดพลาด"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("❌ ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+      }
+    });
+  </script>
+</body>
+</html>

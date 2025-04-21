@@ -1,0 +1,24 @@
+{
+    "title": "SUMMER SONIC BANGKOK 2024",
+    "description": "บัตรราคา: \n2-DAYS: 6,500 (Silver) 7,000 (Gold) 8,500 (Platinum) 20,000 (VIP) บาท \n1-DAY: 3,500 (Silver) 4,000 (Gold) 4,500 (Platinum) 11,000 (VIP) บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "24 สิงหาคม 2024",
+    "end_date": "25 สิงหาคม 2024",
+    "event_slot_time": "12:00",
+    "location": "Impact Challenger 1-2",
+    "url": "https://www.facebook.com/ThailandCoffeeFest",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        6500,
+        7000,
+        8500,
+        11000,
+        20000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/08-20-summer-sonic-bangkok-2024-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:37",
+    "status": "past"
+}

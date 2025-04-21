@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inspira - Home</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #fff; }
+    .header { background: #fca5a5; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .header h1 { margin: 0; font-size: 28px; }
+    .search-container { display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .search-container input { padding: 8px; font-size: 16px; width: 300px; border-radius: 5px 0 0 5px; border: 1px solid #ccc; }
+    .search-container button { padding: 8px 12px; background: #374151; color: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer; }
+    .filter-bar { padding: 10px 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .filter-bar button { padding: 6px 12px; border: none; background: #eee; border-radius: 20px; cursor: pointer; }
+    .filter-bar button.active { background: #60a5fa; color: white; }
+    .grid { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; justify-content: center; }
+    .card { background: #e5e7eb; padding: 20px; border-radius: 10px; text-align: center; width: 200px; box-sizing: border-box; }
+    .card h3 { margin: 10px 0 5px; }
+    .card p { margin: 0; color: #6b7280; }
+    .section { padding: 20px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .scroll-grid { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 10px; }
+    .scroll-grid .card { min-width: 200px; flex: 0 0 auto; }
+    .banner-slider {
+      width: 100%;
+      height: 300px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .banner-slider a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      z-index: 0;
+    }
+
+    .banner-slider a.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .banner-slider img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .banner-slider button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+    .banner-slider button.prev { left: 10px; }
+    .banner-slider button.next { right: 10px; }
+
+    #filteredGrid {
+      position: relative;
+      width: 100%;
+      height: 300px; /* ให้สูงเท่ากับแบนเนอร์ด้านบน */
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .filtered-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      z-index: 0;
+    }
+
+    .filtered-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .card.overlay-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .card.overlay-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(6px);
+      color: #000;
+    }
+
+    .card-overlay h3 {
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .card-overlay p {
+      font-size: 16px;
+      margin-top: 6px;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Inspira</h1>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Find your Exhibition">
+      <button onclick="search()">🔍</button>
+    </div>
+    <div class="flex justify-end p-4 bg-white shadow">
+      <button id="accountBtn" class="text-blue-600 hover:underline text-sm">บัญชีผู้ใช้</button>
+      <!-- ปุ่มลิงก์ไป suggest.html -->
+      <div style="margin-top: 10px;">
+        <button onclick="checkLoginBeforeSuggest()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+          ✍️ เสนอชื่อนิทรรศการใหม่
+        </button>        
+      </div>
+    </div>
+        
+  </div>
+
+  <div class="banner-slider" id="bannerSlider">
+    <button class="prev">◀</button>
+    <button class="next">▶</button>
+  </div>
+
+  <div class="section" id="recommendSection" style="display: none;">
+    <div class="section-header">
+      <h2>Recommended for You</h2>
+    </div>
+    <div class="scroll-grid" id="recommendEvents">
+      <!-- แสดงรายการแนะนำที่นี่ -->
+      <div class="card">
+        <p>กำลังโหลดคำแนะนำ...</p>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="section" id="ongoingSection">
+    <div class="section-header">
+      <h2>Ongoing Events</h2>
+      <button onclick="scrollAndShow('ongoing')" style="background:none;border:none;color:#3b82f6;cursor:pointer">ดูทั้งหมด</button>
+    </div>
+    <div class="scroll-grid" id="ongoingEvents"></div>
+  </div>
+
+  <div class="section" id="upcomingSection">
+    <div class="section-header">
+      <h2>Upcoming Events</h2>
+      <button onclick="scrollAndShow('upcoming')" style="background:none;border:none;color:#3b82f6;cursor:pointer">ดูทั้งหมด</button>
+    </div>
+    <div class="scroll-grid" id="upcomingEvents"></div>
+  </div>
+
+  <div class="filter-bar" id="statusFilter">
+    <button onclick="setStatus('ongoing', event)" class="active">Ongoing</button>
+    <button onclick="setStatus('upcoming', event)">Upcoming</button>
+    <button onclick="setStatus('past', event)">Past</button>
+  </div>
+
+  <div class="filter-bar" id="categoryFilter"></div>
+
+  <div class="section" id="filteredSection" style="display: none;">
+    <div class="scroll-grid" id="filteredGrid"></div>
+  </div>
+  
+
+  <div class="grid" id="exhibitionGrid"></div>
+  <div style="text-align: center; margin-bottom: 40px;">
+    <button id="loadMoreBtn" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+      ดูเพิ่มเติม
+    </button>
+  </div>
+  
+
+  <script>
+    // 🔧 ตัวแปรสำหรับแบนเนอร์
+    let banners = [];
+    let currentIndex = 0;
+    let intervalId;
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBannerSlider();
+      loadPreviewSection('ongoing', 'ongoingEvents');
+      loadPreviewSection('upcoming', 'upcomingEvents');
+      fetchExhibitions();
+      showFilteredExhibitions();
+
+      const token = localStorage.getItem('token');
+      if (token) {
+        // แสดง recommendation section
+        document.getElementById('recommendSection').style.display = 'block';
+
+        // 👉 โหลดข้อมูลจากเพื่อนหรือ mock แรก ๆ ได้เช่น
+        loadRecommendation();
+      }
+
+      // ✅ Account Button
+      document.getElementById('accountBtn')?.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          window.location.href = 'account.html';
+        } else {
+          alert('กรุณาเข้าสู่ระบบก่อน');
+        }
+      });
+  
+      // ✅ Search
+      document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') search();
+      });
+  
+      document.getElementById('loadMoreBtn').addEventListener('click', () => {
+        currentPage++;
+        fetchExhibitions(true);
+      });
+  
+      document.querySelector('.prev').addEventListener('click', showPrevSlide);
+      document.querySelector('.next').addEventListener('click', showNextSlide);
+
+    });
+    let isSliderRunning = false;
+    // ✅ แบนเนอร์อัตโนมัติ
+    function startSlider() {
+      if (isSliderRunning) return;
+      isSliderRunning = true;
+      intervalId = setInterval(() => {
+        banners[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % banners.length;
+        banners[currentIndex].classList.add('active');
+      }, 4000);
+    }
+
+  
+    function stopSlider() {
+      clearInterval(intervalId);
+      isSliderRunning = false;
+    }
+  
+    function showNextSlide() {
+      banners[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % banners.length;
+      banners[currentIndex].classList.add('active');
+    }
+  
+    function showPrevSlide() {
+      banners[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex - 1 + banners.length) % banners.length;
+      banners[currentIndex].classList.add('active');
+    }
+  
+    async function loadBannerSlider() {
+      try {
+        const res = await fetch('http://localhost:5000/exhibitions/ongoing');
+        const data = await res.json();
+
+        const bannerContainer = document.getElementById("bannerSlider");
+        const prevBtn = bannerContainer.querySelector(".prev");
+        const nextBtn = bannerContainer.querySelector(".next");
+
+        // ล้างของเดิม (ยกเว้นปุ่ม)
+        bannerContainer.querySelectorAll("a").forEach(el => el.remove());
+        banners = [];
+
+        const preloadImages = [];
+
+        for (const item of data) {
+          if (!item.cover_picture || !item.cover_picture.startsWith("http")) continue;
+
+          const img = new Image();
+          img.src = item.cover_picture;
+
+          const preload = new Promise((resolve) => {
+            img.onload = () => resolve({ success: true, img, item });
+            img.onerror = () => resolve({ success: false });
+          });
+
+          preloadImages.push(preload);
+        }
+
+        const loaded = await Promise.all(preloadImages);
+        const validItems = loaded.filter(r => r.success).map(r => ({ img: r.img, item: r.item }));
+
+        validItems.forEach(({ img, item }, index) => {
+          const a = document.createElement("a");
+          a.href = `exhibition.html?id=${item._id}`;
+          img.alt = item.title;
+
+          a.appendChild(img);
+          bannerContainer.insertBefore(a, prevBtn); // ใส่ก่อนปุ่ม
+          banners.push(a);
+        });
+
+        if (banners.length === 0) return;
+
+        banners[0].classList.add("active");
+
+        banners.forEach(b => {
+          b.addEventListener('mouseenter', stopSlider);
+          b.addEventListener('mouseleave', startSlider);
+        });
+
+
+        // เริ่มเลื่อนทันที
+        startSlider();
+
+        prevBtn.addEventListener("click", showPrevSlide);
+        nextBtn.addEventListener("click", showNextSlide);
+
+      } catch (err) {
+        console.error("❌ โหลดแบนเนอร์ล้มเหลว:", err);
+      }
+    }
+
+
+    // 🔍 ค้นหา
+    function search() {
+      const keyword = document.getElementById('searchInput').value.trim();
+      if (keyword) {
+        window.location.href = `search.html?q=${encodeURIComponent(keyword)}`;
+      }
+    }
+  
+    // 📋 สถานะ & หมวดหมู่
+    let currentPage = 1;
+    const limit = 12;
+    let currentStatus = 'ongoing';
+    let currentCategory = '';
+    let currentKeyword = '';
+  
+    const categories = [
+      "Art & Design", "Beauty & Fashion", "Home & Furniture",
+      "Business", "Education", "Concert", "Technology",
+      "Book", "Food & Drink", "Others"
+    ];
+  
+    const categoryFilter = document.getElementById('categoryFilter');
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.innerText = cat;
+      btn.onclick = () => setCategory(cat);
+      categoryFilter.appendChild(btn);
+    });
+  
+    function setStatus(status, event) {
+      currentStatus = status;
+      currentKeyword = '';
+      document.getElementById('searchInput').value = '';
+      document.querySelectorAll('#statusFilter button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      currentPage = 1;
+      showFilteredExhibitions();
+      fetchExhibitions(false);
+      loadPreviewSection('ongoing', 'ongoingEvents');
+      loadPreviewSection('upcoming', 'upcomingEvents');
+      
+    }
+  
+    function setCategory(cat) {
+      currentCategory = (currentCategory === cat) ? '' : cat;
+      currentKeyword = '';
+      document.getElementById('searchInput').value = '';
+      document.querySelectorAll('#categoryFilter button').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === currentCategory);
+      });
+      currentPage = 1;
+      showFilteredExhibitions();
+      fetchExhibitions(false);
+    }
+  
+    // 🧠 โหลดนิทรรศการหลัก
+    async function fetchExhibitions(append = false) {
+      const grid = document.getElementById('exhibitionGrid');
+      if (!append) {
+        grid.innerHTML = '<p>กำลังโหลด...</p>';
+        currentPage = 1;
+      }
+  
+      try {
+        let data = [];
+        if (currentKeyword) {
+          const res = await fetch(`http://localhost:5000/exhibitions/search?q=${encodeURIComponent(currentKeyword)}`);
+          data = await res.json();
+        } else {
+          const params = new URLSearchParams({
+            status: currentStatus,
+            page: currentPage,
+            limit: limit
+          });
+          if (currentCategory) params.append('category', currentCategory);
+          const res = await fetch(`http://localhost:5000/exhibitions?${params}`);
+          data = await res.json();
+        }
+  
+        if (!append) grid.innerHTML = '';
+  
+        if (data.length === 0 && !append) {
+          grid.innerHTML = '<p>ไม่พบนิทรรศการที่เกี่ยวข้อง</p>';
+          document.getElementById('loadMoreBtn').style.display = 'none';
+          return;
+        }
+  
+        document.getElementById('loadMoreBtn').style.display = (data.length < limit) ? 'none' : 'inline-block';
+  
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          if (!item.cover_picture || !item.cover_picture.startsWith("http")) return;
+
+          card.innerHTML = `
+            <a href="exhibition.html?id=${item._id}" style="text-decoration: none; color: inherit;">
+              <img src="${item.cover_picture || 'https://via.placeholder.com/200x120?text=No+Image'}" 
+                  alt="${item.title}" 
+                  style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;" />
+              <h3>${item.title}</h3>
+              <p>${item.location || '-'}</p>
+            </a>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (err) {
+        grid.innerHTML = '<p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
+        console.error(err);
+      }
+    }
+  
+    // 🎯 โหลดรายการย่อ Ongoing / Upcoming
+    async function loadPreviewSection(status, containerId) {
+      try {
+        const res = await fetch(`http://localhost:5000/exhibitions?status=${status}`);
+        const data = await res.json();
+        const limitedData = data.slice(0, 5);
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+  
+        limitedData.forEach(item => {
+          if (!item.cover_picture || !item.cover_picture.startsWith("http")) return;
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <a href="exhibition.html?id=${item._id}" style="text-decoration: none; color: inherit;">
+              <img src="${item.cover_picture || 'https://via.placeholder.com/200x120?text=No+Image'}" 
+                  alt="${item.title}" 
+                  style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;" />
+              <h3>${item.title}</h3>
+              <p>${item.location || '-'}</p>
+            </a>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error('Error loading preview:', err);
+      }
+    }
+  
+    // 🔗 ลิงก์ไปยัง suggest.html แบบตรวจสอบ
+    function checkLoginBeforeSuggest() {
+      const token = localStorage.getItem("token");
+      if (token) {
+        window.location.href = "suggest.html";
+      } else {
+        alert("❌ กรุณาเข้าสู่ระบบก่อนเสนอชื่อนิทรรศการ");
+      }
+    }
+  
+    // 🔄 Scroll ลงไปดูรายการทั้งหมด
+    function scrollAndShow(status) {
+      setStatus(status, {
+        target: document.querySelector(`#statusFilter button:nth-child(${status === 'ongoing' ? 1 : 2})`)
+      });
+      setTimeout(() => {
+        const grid = document.getElementById('exhibitionGrid');
+        grid.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+
+    async function loadRecommendation() {
+      const container = document.getElementById('recommendEvents');
+      container.innerHTML = ''; // ล้างของเก่า
+
+      const placeholderImg = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png";
+
+      const mockData = [
+        { _id: '1', title: 'Mock Exhibition A', cover_picture: '', location: 'Mock Hall 1' },
+        { _id: '2', title: 'Mock Exhibition B', cover_picture: '', location: 'Mock Center 2' },
+      ];
+
+      mockData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <a href="exhibition.html?id=${item._id}" style="text-decoration: none; color: inherit;">
+            <img src="${item.cover_picture || placeholderImg}"
+                alt="${item.title}"
+                style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;" />
+            <h3>${item.title}</h3>
+            <p>${item.location}</p>
+          </a>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+
+    async function showFilteredExhibitions() {
+      const grid = document.getElementById('filteredGrid');
+      const section = document.getElementById('filteredSection');
+      grid.innerHTML = '';
+
+      try {
+        const params = new URLSearchParams({ status: currentStatus });
+        if (currentCategory) params.append('category', currentCategory);
+
+        const res = await fetch(`http://localhost:5000/exhibitions?${params}`);
+        const data = await res.json();
+
+        if (data.length === 0) {
+          section.style.display = 'none';
+          return;
+        }
+
+        section.style.display = 'block';
+
+        data.forEach((item, index) => {
+
+          if (!item.cover_picture || !item.cover_picture.startsWith("http")) return;
+
+          const slide = document.createElement('div');
+          slide.className = 'filtered-slide' + (index === 0 ? ' active' : '');
+          slide.innerHTML = `
+            <a href="exhibition.html?id=${item._id}" style="text-decoration: none; color: inherit;">
+              <div class="card overlay-card" style="margin: auto;">
+                <img src="${item.cover_picture || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${item.title}">
+                <div class="card-overlay">
+                  <h3>${item.title}</h3>
+                  <p>${item.location || '-'}</p>
+                </div>
+              </div>
+            </a>
+          `;
+          grid.appendChild(slide);
+        });
+
+        startFilteredFade(); // 👈 เรียกฟังก์ชัน fade
+
+        } catch (err) {
+          console.error("❌ โหลดนิทรรศการกรองล้มเหลว:", err);
+          section.style.display = 'none';
+        }
+      }
+      function startFilteredFade() {
+        const slides = document.querySelectorAll('#filteredGrid .filtered-slide');
+        let currentSlide = 0;
+
+        if (slides.length <= 1) return; // ไม่มีสไลด์หรือมีแค่ 1 ไม่ต้องทำอะไร
+
+        setInterval(() => {
+          slides[currentSlide].classList.remove('active');
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add('active');
+        }, 3000);
+      }
+
+  </script>  
+</body>
+</html>

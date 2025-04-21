@@ -1,0 +1,22 @@
+{
+    "title": "งานกีฬาสีอนุบาลหนูน้อย48 2022",
+    "description": "บัตรราคา 3,000 / 2,600 / 1,800 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "10 กันยายน 2022",
+    "end_date": "10 กันยายน 2022",
+    "event_slot_time": "16:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/54860/48-2022",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1800,
+        2600,
+        3000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2022/09-10-bnkcgm48sportday-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:16",
+    "status": "past"
+}

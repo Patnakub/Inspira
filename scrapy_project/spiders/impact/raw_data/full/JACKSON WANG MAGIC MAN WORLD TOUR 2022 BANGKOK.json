@@ -1,0 +1,24 @@
+{
+    "title": "JACKSON WANG MAGIC MAN WORLD TOUR 2022 BANGKOK",
+    "description": "บัตรราคา 18,000 / 9,000 / 6,500 / 5,500 / 5,000 / 4,000 / 3,000 / 2,000 บาท",
+    "categories": [
+        "Concert",
+        "Others"
+    ],
+    "start_date": "25 พฤศจิกายน 2022",
+    "end_date": "27 พฤศจิกายน 2022",
+    "event_slot_time": "19:00",
+    "location": "Impact Arena",
+    "url": "http://www.vijicorp.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        5500,
+        6500,
+        9000,
+        18000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2022/10-28-jacksonwang-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:18",
+    "status": "past"
+}

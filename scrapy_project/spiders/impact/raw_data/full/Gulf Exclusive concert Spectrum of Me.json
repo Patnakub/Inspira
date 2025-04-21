@@ -1,0 +1,23 @@
+{
+    "title": "Gulf Exclusive concert Spectrum of Me",
+    "description": "กำหนดการเปิดขายบัตร: วันอาทิตย์ที่ 30 ตุลาคม 2565 เวลา 13.00 น. เป็นต้นไป \r\n► ช่องทางการจำหน่าย: https://www.gulfkanawutofc.com บัตรราคา 7,500 / 5,500 / 4,500 / 3,000 / 2,000 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "03 ธันวาคม 2022",
+    "end_date": "03 ธันวาคม 2022",
+    "event_slot_time": "14:00",
+    "location": "Impact Thunder Dome",
+    "url": "http://www.gulfkanawutofc.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3000,
+        4500,
+        5500,
+        7500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2022/11-21-gulf-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:19",
+    "status": "past"
+}

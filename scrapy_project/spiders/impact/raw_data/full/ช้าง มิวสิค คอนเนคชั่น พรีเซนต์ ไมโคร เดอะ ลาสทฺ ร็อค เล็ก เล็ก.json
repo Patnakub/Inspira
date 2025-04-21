@@ -1,0 +1,26 @@
+{
+    "title": "ช้าง มิวสิค คอนเนคชั่น พรีเซนต์ ไมโคร เดอะ ลาสทฺ ร็อค เล็ก เล็ก",
+    "description": "บัตรราคา 6,000 / 5,000 / 4,500 / 4,000 / 3,500 / 3,000 / 2,500 / 1,500 บาท เวลาแสดง: \r\n20 พฤษภาคม 2566 | 19:00 น. \r\n21 พฤษภาคม 2566 | 18:00 น.",
+    "categories": [
+        "Concert",
+        "Others"
+    ],
+    "start_date": "20 พฤษภาคม 2023",
+    "end_date": "21 พฤษภาคม 2023",
+    "event_slot_time": "Several Showtime",
+    "location": "Impact Arena",
+    "url": "http://www.facebook.com/gmmshow",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3000,
+        3500,
+        4000,
+        4500,
+        5000,
+        6000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2023/03-07-micro-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:23",
+    "status": "past"
+}

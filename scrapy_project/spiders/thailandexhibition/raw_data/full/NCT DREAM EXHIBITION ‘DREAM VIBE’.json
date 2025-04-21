@@ -1,0 +1,22 @@
+{
+    "title": "NCT DREAM EXHIBITION ‘DREAM VIBE’",
+    "description": "NCT DREAM EXHIBITION ‘DREAM VIBE’วันที่ 23 ธันวาคม 2567 - 2 กุมภาพันธ์ 2568เวลา 11.00 - 20.00 น.ณ ICONSIAM ชั้น 7เตรียมตัวให้พร้อม แล้วมาก้าวเข้าสู่โลกของ NCT DREAM กับ DREAM VIBE Exhibition มาร่วมสัมผัสพลังแห่งความฝันที่ทั้งฟินและเต็มไปด้วยโมเมนต์สุดพิเศษ รีบแพลนวันแล้วมาสนุกไปด้วยกัน!บัตรเข้าชมนักเรียน/นักศึกษา(ไทย) 400 บาท (โปรดแสดงบัตรนักเรียน/นักศึกษา)บุคคลทั่วไป 500 บาท (ราคาเดียวกันทั้งวันธรรมดาและวันหยุด)หมายเหตุ: บัตรมีจำหน่ายเฉพาะที่หน้างาน และใช้ได้เพียง 1 รอบเท่านั้น",
+    "categories": [
+        "Others",
+        "Concert"
+    ],
+    "start_date": "23 ธันวาคม 2024",
+    "end_date": "2 กุมภาพันธ์ 2025",
+    "event_slot_time": "11:00–20:00",
+    "location": "ไอคอนสยาม - ICONSIAM",
+    "url": "https://www.facebook.com/ICONSIAM",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/NCT_DREAM_EXHIBITION_DREAM_VIBE_4f6a9699c8.jpg",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        400,
+        500
+    ],
+    "reliability_score": 2,
+    "timestamp": "2025-03-29 17:15:57",
+    "status": "past"
+}

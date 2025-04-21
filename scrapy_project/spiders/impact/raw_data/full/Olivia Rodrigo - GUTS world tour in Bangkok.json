@@ -1,0 +1,24 @@
+{
+    "title": "Olivia Rodrigo - GUTS world tour in Bangkok",
+    "description": "บัตรราคา: 11,000 (VIP) / 5,800 / 5,300 / 4,800 / 3,800 / 2,800 / 1,800 บาท 15 กันยายน 2567 เวลาแสดง: 19:00 น. \n16 กันยายน 2567 เวลาแสดง: 20:00 น.",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "15 กันยายน 2024",
+    "end_date": "16 กันยายน 2024",
+    "event_slot_time": "Several Showtime",
+    "location": "Impact Arena",
+    "url": "https://www.facebook.com/livenationth",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3800,
+        4800,
+        5300,
+        5800,
+        11000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/08-22-olivia-rodrigo-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:39",
+    "status": "past"
+}

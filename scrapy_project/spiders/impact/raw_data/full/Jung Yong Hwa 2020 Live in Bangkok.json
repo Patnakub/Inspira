@@ -1,0 +1,26 @@
+{
+    "title": "Jung Yong Hwa 2020 Live in Bangkok",
+    "description": "บัตรราคา 6,000 (วีไอพี) / 5,300 (บัตรยืน) / 4,500 / 4,000 / 3,300 / 2,300 บาท",
+    "categories": [
+        "Concert",
+        "Others"
+    ],
+    "start_date": "25 มกราคม 2020",
+    "end_date": "25 มกราคม 2020",
+    "event_slot_time": "17:00",
+    "location": "Impact Thunder Dome",
+    "url": "http://www.allticket.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        2300,
+        3300,
+        4000,
+        4500,
+        5300,
+        6000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2019/12-09-jungyonghwa-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:13:59",
+    "status": "past"
+}

@@ -1,0 +1,23 @@
+{
+    "title": "Earth Patravee ‘Once Upon a Dream’ Concert",
+    "description": "Earth Patravee ‘Once Upon a Dream’ Concertวันที่ 26 ตุลาคม 2567ณ Siam-Pic Ganesha HallEarth Patravee ‘Once Upon a Dream’ Concert คอนเสิร์ตใหญ่ครั้งแรกของ ‘เอิ๊ต ภัทรวี’ ที่เราอยากจะพาทุกคนเดินทางไปด้วยกัน โดยมีเสียงเพลงเป็นยานพาหนะ ที่จะพาเราไปยังความทรงจำ สถานที่ และความรู้สึก ตลอด 10 ปีที่ผ่านมา เราเริ่มต้นการเดินทางของเราจากบนเตียง หลายบทเพลงถูกแต่ง ขบคิด นอนฝันจากบนเตียง ก่อนจะถูกบันทึกและเดินทางไปยังทุก ๆ คนบทเพลงเหล่านั้นที่ทุกคนคิดถึง จะถูกนำมาถ่ายทอดอีกครั้งในบรรยากาศที่อบอุ่นไม่ต้องแพคกระเป๋า เพราะการเดินทางครั้งนี้ เราจะท่องโลกความฝันไปด้วยกันบัตรราคา : 3,500 (พร้อมเบเนฟิตพิเศษ) / 3,000 / 2,800 / 2,500 / 2,000 / 1,500เปิดจำหน่ายบัตรวันที่ 1 กันยายน เวลา 10.00 น.เป็นต้นไปทาง The Concert Application หรือ www.theconcert.com",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "26 ตุลาคม 2024",
+    "end_date": "26 ตุลาคม 2024",
+    "event_slot_time": null,
+    "location": "โรงละครเคแบงก์สยามพิฆเนศ - KBank Siam Pic-Ganesha ",
+    "url": "https://www.facebook.com/EarthPatravee",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/Earth_Patravee_Once_Upon_a_Dream_Concert_cd6b80ae04.jpg",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1500,
+        2800,
+        3000,
+        3500
+    ],
+    "reliability_score": 2,
+    "timestamp": "2025-03-29 17:15:50",
+    "status": "past"
+}

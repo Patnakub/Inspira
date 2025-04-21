@@ -1,0 +1,27 @@
+{
+    "title": "Marathon Concert Fest",
+    "description": "ครั้งแรกกับ “เทศกาลคอนเสิร์ต” \r\nในอารีน่าฮอลล์ที่ใหญ่ที่สุด เล่นต่อเนื่องและยาวนานที่สุดของเมืองไทย \r\nกับงาน THE CONCERT APPLICATION PRESENTS MARATHON CONCERT FEST \r\nเทศกาลคอนเสิร์ตที่รวม 16 คอนเสิร์ตไว้บนเวทีเดียว 2 วัน 2 รอบการแสดง ต่อเนื่อง 8 ชั่วโมง กับ 8 ศิลปิน \r\n DAY 1 \r\nBIG ASS, BODYSLAM, BOMB AT TRACK, KLEAR, LABANOON, NUM KALA, PARADOX, THE YERS \r\n DAY 2 \r\nCOCKTAIL, LOMOSONIC, PALMY, POTATO, SLOT MACHINE, TAITOSMITH, TILLY BIRDS, THREE MAN DOWN วันเสาร์ที่ 13 และอาทิตย์ที่ 14 สิงหาคม 2565 ณ อิมแพ็ค อารีน่า เมืองทองธานี \r\nบัตรราคา 3,000 บาท, 2,500 บาท, 2,000 บาท, 1,800 บาท, 1,500 บาท, 1,200 บาท \r\nจำหน่ายบัตรวันศุกร์ที่ 1 กรกฎาคม 2565 เป็นต้นไป ที่ แอปพลิเคชัน THE CONCERT หรือเว็บไซต์ THECONCERT.COM #MARATHONconcertFest #GFest #GMMShow บัตรราคา 3,000 / 2,500 / 2,000 / 1,800 / 1,500 / 1,200 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "13 สิงหาคม 2022",
+    "end_date": "14 สิงหาคม 2022",
+    "event_slot_time": "15:00",
+    "location": "Impact Arena",
+    "url": "http://www.theconcert.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1200,
+        1200,
+        1500,
+        1500,
+        1800,
+        1800,
+        3000,
+        3000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2022/06-24-marathon-01-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:15",
+    "status": "past"
+}

@@ -1,0 +1,28 @@
+{
+    "title": "NuNew 1st Concert “DREAM CATCHER”",
+    "description": "บัตรราคา: 7,900 / 7,500 / 7,000 / 6,500 / 6,000 / 5,500 / 5,000 / 4,500 / 3,500 / 2,500 / 1,500 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "10 สิงหาคม 2024",
+    "end_date": "11 สิงหาคม 2024",
+    "event_slot_time": "17:00 - 20:00",
+    "location": "Impact Arena",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/126741/nunew-1st-concert-ldquo-dream-catcher-rdquo",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3500,
+        4500,
+        5000,
+        5500,
+        6000,
+        6500,
+        7000,
+        7500,
+        7900
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/07-19-nunew-1st-concert-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:37",
+    "status": "past"
+}

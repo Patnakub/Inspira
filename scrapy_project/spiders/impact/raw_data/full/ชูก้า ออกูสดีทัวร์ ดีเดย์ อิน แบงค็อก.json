@@ -1,0 +1,25 @@
+{
+    "title": "ชูก้า ออกูสดีทัวร์ ดีเดย์ อิน แบงค็อก",
+    "description": "บัตรราคา 6,200 -VIP Package (standing) / 5,800 (standing) / 6,000 / 5,500 / 4,500 / 3,500 / 2,500  บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "09 มิถุนายน 2023",
+    "end_date": "11 มิถุนายน 2023",
+    "event_slot_time": "19:00",
+    "location": "Impact Arena",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/56555/",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3500,
+        4500,
+        5500,
+        5800,
+        6000,
+        6200
+    ],
+    "cover_picture": "null",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:24",
+    "status": "past"
+}

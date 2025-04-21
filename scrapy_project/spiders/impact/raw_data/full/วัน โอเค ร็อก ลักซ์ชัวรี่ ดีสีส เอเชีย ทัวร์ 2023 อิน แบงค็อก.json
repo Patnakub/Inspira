@@ -1,0 +1,25 @@
+{
+    "title": "วัน โอเค ร็อก ลักซ์ชัวรี่ ดีสีส เอเชีย ทัวร์ 2023 อิน แบงค็อก",
+    "description": "บัตรราคา: 5,500 / 5,000​ (ยืน) / 4,500 / 4,000 (ยืน) / 3,800 / 2,800 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "12 ธันวาคม 2023",
+    "end_date": "12 ธันวาคม 2023",
+    "event_slot_time": "20:00",
+    "location": "Impact Arena",
+    "url": "http://www.avalon.co.th",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        2800,
+        3800,
+        4000,
+        4500,
+        5000,
+        5500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2023/11-20-oneokrock-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:30",
+    "status": "past"
+}

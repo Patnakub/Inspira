@@ -1,0 +1,25 @@
+{
+    "title": "WINNER CROSS TOUR IN BANGKOK",
+    "description": "บัตรราคา 6,500 (วีไอพี) / 5,800 (ยืน) / 5,000 / 4,500 / 3,800 / 2,800 บาท วันที่ 11 มกราคม 2563 เวลาแสดง: 18:00 น. \r\nวันที่ 12 มกราคม 2563 เวลาแสดง: 17:00 น.",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "11 มกราคม 2020",
+    "end_date": "12 มกราคม 2020",
+    "event_slot_time": "Several Showtime",
+    "location": "Impact Thunder Dome",
+    "url": "http://www.allticket.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        2800,
+        3800,
+        4500,
+        5000,
+        5800,
+        6500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2019/11-25-winnercross-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:13:59",
+    "status": "past"
+}

@@ -1,0 +1,26 @@
+{
+    "title": "กรีน เดย์ ไลฟ์",
+    "description": "พลาดครั้งนี้ เดี๋ยวอดพังก์ 14 ปีที่ชาวร็อกโหยหา!! Green Day กลับมาแล้ว ใน \"Green Day Live In Bangkok\" เปิดแสดง 12 ก.พ. 2568 อิมแพ็ค อารีน่า \n \nบัตรราคา: 6,800 / 6,500 (บัตรยืน) / 5,800 / 5,500 (บัตรยืน) / 4,800 / 3,800 / 2,800 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "12 กุมภาพันธ์ 2025",
+    "end_date": "12 กุมภาพันธ์ 2025",
+    "event_slot_time": "20:30",
+    "location": "Impact Arena",
+    "url": "https://www.livenationtero.co.th",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        2800,
+        3800,
+        4800,
+        5500,
+        5800,
+        6500,
+        6800
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2025/01-31-Greenday-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:43",
+    "status": "past"
+}

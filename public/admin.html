@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>หน้าแอดมิน</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 p-6">
+  <button id="logoutBtn" class="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+    ออกจากระบบ
+  </button>
+
+  <div class="text-center">
+    <h1 class="text-2xl font-bold mb-4">ยินดีต้อนรับ แอดมิน</h1>
+    <button onclick="loadSuggestions()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      จัดการงานนิทรรศการที่ผู้ใช้เสนอมา
+    </button>
+    <button onclick="loadOthersExhibitions()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 mt-2">
+      จัดการหมวดหมู่งานที่เป็น Others
+    </button>
+  </div>
+  <div id="filterControls" class="mb-4 text-right hidden">
+    <label for="statusFilter" class="mr-2 font-medium">กรองสถานะ:</label>
+    <select id="statusFilter" class="border rounded p-1">
+      <option value="all">ทั้งหมด</option>
+      <option value="ongoing">ongoing</option>
+      <option value="upcoming">upcoming</option>
+      <option value="past">past</option>
+    </select>
+  </div>
+  
+
+  <div id="pendingList" class="mt-6 space-y-4 hidden"></div>
+  <div id="othersList" class="mt-6 space-y-4 hidden"></div>
+
+
+  <script>
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("กรุณาเข้าสู่ระบบก่อน");
+      window.location.href = "/login.html";
+    }
+
+    axios.get('/auth/me')
+      .then(res => {
+        if (res.data.role !== 'admin') {
+          alert("คุณไม่มีสิทธิ์เข้าถึงหน้านี้");
+          window.location.href = "/public/home.html";
+        }
+      })
+      .catch(() => {
+        alert("Session หมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง");
+        window.location.href = "/login.html";
+      });
+
+    async function fetchCategories() {
+      const res = await axios.get('/categories');
+      return res.data;
+    }
+
+    async function loadSuggestions() {
+      const container = document.getElementById('pendingList');
+      container.classList.remove('hidden');
+      document.getElementById('othersList').classList.add('hidden'); 
+      document.getElementById('filterControls').classList.add('hidden');
+      try {
+        const res = await axios.get('/admin/suggestions/pending');
+        const categories = await fetchCategories();
+
+        container.innerHTML = '';
+        if (res.data.length === 0) {
+          container.innerHTML = '<p class="text-center text-gray-500">ไม่มีงานที่รออนุมัติ</p>';
+          return;
+        }
+
+        await loadCategories();
+
+        res.data.forEach(s => {
+          const card = document.createElement('div');
+          card.className = 'bg-white p-4 rounded shadow';
+          card.id = `card-${s._id}`; 
+
+          const isOthers = s.categories?.includes("Others");
+          let options = '';
+          if (isOthers && allCategories.length > 0) {
+            options = allCategories
+              .filter(c => c.name !== "Others")
+              .map(c => `<option value="${c.name}">${c.name}</option>`)
+              .join('');
+          }
+
+
+          card.innerHTML = `
+            <h2 class="text-xl font-bold mb-2">${s.title}</h2>
+            <p><strong>สถานที่:</strong> ${s.location || 'ไม่ระบุ'}</p>
+            <p><strong>วันเริ่ม:</strong> ${s.start_date || '-'} | <strong>วันสิ้นสุด:</strong> ${s.end_date || '-'}</p>
+            <p><strong>เวลา:</strong> ${s.event_slot_time || '-'}</p>
+            <p><strong>หมวดหมู่:</strong> ${s.categories?.join(', ') || '-'}</p>
+            ${isOthers ? `
+              <label class="block mt-2">แก้ไขหมวดหมู่:</label>
+              <select data-id="${s._id}" class="w-full border rounded p-2">
+                <option selected disabled>เลือกหมวดหมู่</option>
+                ${options}
+              </select>
+              <button onclick="saveSelectedCategory('${s._id}')" class="mt-2 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                💾 บันทึกหมวดหมู่
+              </button>
+
+            ` : ''}
+            <p class="break-all w-full"><strong>คำอธิบาย:</strong> ${s.description || 'ไม่มีคำอธิบาย'}</p>
+            <p><strong>ค่าเข้าชม:</strong> ${s.ticket || 'ไม่ระบุ'}</p>
+            <p><strong>ราคาบัตร:</strong> ${s.ticket_price?.length ? s.ticket_price.join(', ') + ' บาท' : '-'}</p>
+            <p><strong>ละติจูด:</strong> ${s.latitude || '-'} | <strong>ลองจิจูด:</strong> ${s.longitude || '-'}</p>
+            ${s.image_url ? `<img src="${s.image_url}" class="mt-4 w-full max-h-60 object-contain rounded">` : ''}
+            <div class="mt-4 flex gap-2">
+              <button onclick="approveSuggestion('${s._id}')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">✅ อนุมัติ</button>
+              <button onclick="deleteSuggestion('${s._id}')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">🗑 ลบ</button>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      } catch (err) {
+        alert("โหลดข้อมูลล้มเหลว");
+        console.error(err);
+      }
+    }
+
+    async function updateCategory(id, newCategory) {
+      try {
+        await axios.put(`/admin/suggestions/${id}/category`, { category: newCategory });
+        alert("อัปเดตหมวดหมู่เรียบร้อยแล้ว");
+        loadSuggestions(); // โหลดใหม่ให้แสดงค่าล่าสุด
+      } catch (err) {
+        console.error("อัปเดตหมวดหมู่ผิดพลาด", err);
+        alert("ไม่สามารถอัปเดตหมวดหมู่ได้");
+      }
+    }
+
+
+    async function approveSuggestion(id) {
+      try {
+        await axios.put(`/admin/suggestions/${id}/approve`);
+        alert("อนุมัติแล้ว");
+        loadSuggestions();
+      } catch (err) {
+        console.error(err);
+        alert("ไม่สามารถอนุมัติได้");
+      }
+    }
+
+    async function deleteSuggestion(id) {
+      if (!confirm("แน่ใจว่าต้องการลบ?")) return;
+      try {
+        await axios.delete(`/admin/suggestions/${id}`);
+        alert("ลบเรียบร้อย");
+        loadSuggestions();
+      } catch (err) {
+        console.error(err);
+        alert("ลบไม่สำเร็จ");
+      }
+    }
+
+    function saveSelectedCategory(id) {
+      const selectEl = document.querySelector(`select[data-id="${id}"]`);
+      const newCategory = selectEl?.value;
+
+      if (!newCategory || newCategory === "เลือกหมวดหมู่") {
+        alert("กรุณาเลือกหมวดหมู่ก่อนบันทึก");
+        return;
+      }
+
+      updateCategory(id, newCategory);
+    }
+
+
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+      localStorage.removeItem('token');
+      alert('คุณได้ออกจากระบบแล้ว');
+      window.location.href = 'index.html';
+    });
+
+    let allCategories = [];
+    let currentPage = 1;
+    let totalExhibitions = 0;
+    let perPage = 10;
+
+    // โหลดหมวดหมู่ทั้งหมดก่อน
+    async function loadCategories() {
+      try {
+        const res = await axios.get('/categories');
+        allCategories = res.data;
+      } catch (err) {
+        console.error("โหลดหมวดหมู่ล้มเหลว", err);
+      }
+    }
+
+    async function loadOthersExhibitions(reset = true) {
+      document.getElementById('filterControls').classList.remove('hidden');
+      document.getElementById('pendingList').classList.add('hidden');
+      const container = document.getElementById('othersList');
+
+      container.classList.remove('hidden');
+      if (reset) {
+        container.innerHTML = "<p class='text-center'>🔄 กำลังโหลด...</p>";
+        currentPage = 1;
+      }
+
+      try {
+        const categoriesRes = await axios.get('/categories');
+        const allCats = categoriesRes.data.filter(c => c.name !== "Others");
+
+        const status = document.getElementById('statusFilter')?.value || 'all';
+        const res = await axios.get(`/admin/exhibitions/others?page=${currentPage}&limit=${perPage}&status=${status}`);
+        const { exhibitions, total } = res.data;
+        totalExhibitions = total;
+
+        if (reset) container.innerHTML = '';
+
+        if (exhibitions.length === 0 && reset) {
+          container.innerHTML = '<p class="text-center text-gray-500">ไม่พบนิทรรศการที่มีหมวดหมู่ Others</p>';
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        exhibitions.forEach(ex => {
+          const card = document.createElement('div');
+          card.className = 'bg-white p-4 rounded shadow';
+
+          const options = allCats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+          card.innerHTML = `
+            <h2 class="text-xl font-bold mb-2">${ex.title}</h2>
+            <p><strong>รายละเอียด:</strong> ${ex.description || '-'}</p>
+            <p><strong>สถานที่:</strong> ${ex.location || '-'}</p>
+            <p><strong>หมวดหมู่เดิม:</strong> ${ex.categories?.join(', ') || '-'}</p>
+            <label class="block mt-2">แก้ไขหมวดหมู่:</label>
+            <select class="w-full border rounded p-2" id="cat-${ex._id}">
+              <option disabled selected>เลือกหมวดหมู่</option>
+              ${options}
+            </select>
+            <button onclick="saveCategory('${ex._id}')" class="mt-2 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+              💾 บันทึกหมวดหมู่
+            </button>
+            <button onclick="confirmOthers('${ex._id}')" 
+              class="mt-2 bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-800">
+              ✅ ยืนยันว่า Others ถูกต้อง
+            </button>
+
+
+          `;
+
+          fragment.appendChild(card);
+        });
+
+        container.appendChild(fragment);
+        document.getElementById('statusFilter')?.addEventListener('change', () => {
+          loadOthersExhibitions(true);
+        });
+
+
+        // 🔄 ปุ่ม Load More
+        const existingBtn = document.getElementById('loadMoreBtn');
+        if (existingBtn) existingBtn.remove();
+
+        if (currentPage * perPage < totalExhibitions) {
+          const btn = document.createElement('button');
+          btn.id = 'loadMoreBtn';
+          btn.className = 'mt-4 bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-900 block mx-auto';
+          btn.innerText = 'โหลดเพิ่มเติม';
+          btn.onclick = () => {
+            currentPage++;
+            loadOthersExhibitions(false);
+          };
+          container.appendChild(btn);
+        }
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="text-center text-red-500">เกิดข้อผิดพลาด</p>';
+      }
+    }
+
+
+    async function saveCategory(id) {
+      const selectEl = document.getElementById(`cat-${id}`);
+      const newCategory = selectEl?.value;
+      if (!newCategory || newCategory === "เลือกหมวดหมู่") {
+        alert("กรุณาเลือกหมวดหมู่ก่อนบันทึก");
+        return;
+      }
+
+      try {
+        await axios.put(`/admin/exhibitions/${id}/category`, { category: newCategory });
+        alert("บันทึกสำเร็จ");
+
+        // ✅ ลบ card นี้ออกจาก DOM
+        const card = selectEl.closest(".bg-white");
+        if (card) card.remove();
+
+        // ✅ ถ้าไม่มีการ์ดเหลืออยู่เลย แสดงข้อความว่าไม่มีงานแล้ว
+        const remaining = document.querySelectorAll('#othersList .bg-white');
+        if (remaining.length === 0) {
+          const container = document.getElementById('othersList');
+          container.innerHTML = '<p class="text-center text-gray-500">ไม่มีงาน Others ที่เหลืออยู่</p>';
+        }
+      } catch (err) {
+        console.error(err);
+        alert("ไม่สามารถบันทึกได้");
+      }
+    }
+
+    async function confirmOthers(id) {
+    try {
+      await axios.put(`/admin/exhibitions/${id}/category`, { category: "Others" });
+      alert("ยืนยันหมวด Others สำเร็จ");
+
+      // ✅ ลบการ์ดนี้ออกจาก DOM ทันที
+      const card = document.querySelector(`#cat-${id}`)?.closest('.bg-white');
+      if (card) card.remove();
+
+      // ✅ ถ้าไม่มีการ์ดเหลืออยู่เลย แสดงข้อความ
+      const remaining = document.querySelectorAll('#othersList .bg-white');
+      if (remaining.length === 0) {
+        const container = document.getElementById('othersList');
+        container.innerHTML = '<p class="text-center text-gray-500">ไม่มีงาน Others ที่เหลืออยู่</p>';
+      }
+      
+    } catch (err) {
+      console.error(err);
+      alert("เกิดข้อผิดพลาดในการยืนยัน");
+    }
+  }
+    // ✅ กำหนดให้ status filter ทำงานเมื่อเปลี่ยนค่า
+    document.getElementById('statusFilter')?.addEventListener('change', () => {
+      loadOthersExhibitions(true);
+    });
+
+  </script>
+</body>
+</html>

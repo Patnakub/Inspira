@@ -1,0 +1,24 @@
+{
+    "title": "30th AnniWARsary: I Wish You Happiness",
+    "description": "บัตรราคา: 7,500 / 6,500 / 5,000 / 4,000 / 3,500 / 2,500 / 1,500 บาท \nLive Streaming: 1,490 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "22 มิถุนายน 2024",
+    "end_date": "23 มิถุนายน 2024",
+    "event_slot_time": "15:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.theconcert.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3500,
+        4000,
+        5000,
+        6500,
+        7500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/05-27-30th-anniwarsary-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:35",
+    "status": "past"
+}

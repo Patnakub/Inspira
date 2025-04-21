@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>รายละเอียดนิทรรศการ</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="flex justify-end p-4 bg-white shadow">
+    <button id="accountBtn" class="text-blue-600 hover:underline text-sm">บัญชีผู้ใช้</button>
+  </div>  
+  <div class="max-w-4xl mx-auto p-6">
+    <button onclick="window.location.href='home.html'" class="text-blue-600 hover:underline mb-4 block">&larr; กลับ</button>
+    
+    <h1 id="title" class="text-3xl font-bold mb-2"></h1>
+    <span id="category" class="inline-block bg-blue-100 text-blue-700 text-sm px-2 py-1 rounded mb-4"></span>
+
+    <img id="cover" src="" alt="Exhibition Cover" class="w-full max-h-[400px] object-cover rounded shadow mb-4" />
+
+    <div class="bg-white p-4 rounded shadow space-y-2 mb-4">
+        <p><strong>สถานที่:</strong> <span id="location"></span></p>
+        <p><strong>วันที่:</strong> <span id="date"></span></p>
+        <p id="time-container" class="hidden"><strong>เวลา:</strong> <span id="time"></span></p>
+        <p><strong>ประเภทบัตร:</strong> <span id="ticket"></span></p>
+        <p id="price-container" class="hidden"><strong>ราคาบัตร:</strong> <span id="ticket_price"></span></p>
+        <p id="url-container" class="hidden"><strong>รายละเอียดเพิ่มเติม:</strong> <a id="externalLink" href="#" class="text-blue-600 underline" target="_blank">ไปยังเว็บไซต์</a></p>
+    </div>
+      
+
+    <p id="description" class="leading-relaxed mt-6 break-words whitespace-pre-wrap"></p>
+
+    <div class="mt-10 bg-white p-6 rounded shadow-md">
+      <h2 class="text-xl font-bold mb-4">รีวิวจากผู้เข้าชม</h2>
+      <a id="loadMoreBtn" href="#" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hidden">ดูรีวิวเพิ่มเติม</a>
+      <div id="userReview" class="mb-6"></div>
+      <div id="otherReviews" class="space-y-4"></div>
+      
+    </div>
+    
+
+    <div class="flex gap-4">
+      <button class="bg-yellow-400 text-white px-4 py-2 rounded">❤️ Favorite</button>
+      <button class="bg-green-600 text-white px-4 py-2 rounded">Review</button>
+      <button id="mapBtn" class="bg-purple-500 text-white px-4 py-2 rounded">แผนที่</button>
+      
+    </div>
+  </div>
+
+  <script src="js/exhibition.js"></script>
+
+</body>
+</html>

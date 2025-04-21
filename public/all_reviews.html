@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>รีวิวทั้งหมด</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="max-w-4xl mx-auto py-10 px-6">
+    <button id="backBtn" class="mb-4 text-blue-600 hover:underline">&larr; ย้อนกลับไปหน้ารายละเอียด</button>
+    <h1 class="text-2xl font-bold mb-6">รีวิวทั้งหมดของนิทรรศการ</h1>
+    <div id="reviewContainer" class="space-y-6"></div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const exhibitionId = urlParams.get("id");
+    const token = localStorage.getItem("token");
+    const userId = token ? JSON.parse(atob(token.split('.')[1])).id : null;
+  
+    // ปุ่มย้อนกลับ
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = `exhibition.html?id=${exhibitionId}`;
+    });
+  
+    async function loadAllReviews() {
+      try {
+        const res = await fetch(`http://localhost:5000/reviews/${exhibitionId}`);
+        const reviews = await res.json();
+
+        // กรองรีวิวของตัวเอง (user) ให้อยู่บนสุด
+        const userReview = reviews.filter(r => r.user_id._id === userId);
+        const otherReviews = reviews.filter(r => r.user_id._id !== userId);
+
+        // รวมรีวิวของตัวเองอยู่บนสุด ตามด้วยรีวิวคนอื่น
+        const allSortedReviews = [...userReview, ...otherReviews];
+
+        const container = document.getElementById("reviewContainer");
+        container.innerHTML = "";
+
+        allSortedReviews.forEach(r => {
+          const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+          const id = r.user_id._id || r.user_id;
+          const isUser = id === userId;
+          const username = r.username || (r.user_id?.username ?? "ผู้ใช้งาน");
+          const image = r.image_url ? `<img src="http://localhost:5000${r.image_url}" class="mt-2 rounded max-h-48" alt="รูปรีวิว">` : "";
+          const editBtn = isUser ? `<button onclick="window.location.href='review.html?id=${exhibitionId}'" class="text-sm text-blue-600 hover:underline ml-2">แก้ไข</button>` : "";
+
+          container.insertAdjacentHTML("beforeend", `
+            <div class="bg-white p-4 rounded shadow">
+              <div class="flex justify-between items-center">
+                <strong>${isUser ? "รีวิวของคุณ" : username}</strong>
+                <div>
+                  <span class="text-yellow-500">${stars}</span>
+                  ${editBtn}
+                </div>
+              </div>
+              <p class="text-sm mt-2">${r.review}</p>
+              ${image}
+            </div>
+          `);
+        });
+
+      } catch (err) {
+        console.error("โหลดรีวิวล้มเหลว:", err);
+        alert("เกิดข้อผิดพลาดในการโหลดรีวิว");
+      }
+    }
+  
+    loadAllReviews();
+  </script>  
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+    "title": "Synthetic Muse",
+    "description": "Synthetic Museวันที่ 24 ธันวาคม 2567 - 12 มกราคม 2568ณ ห้องนิทรรศการ ชั้น 3 หอศิลปวัฒนธรรมแห่งกรุงเทพมหานครSynthetic Muse 2.0: งานแสดงผลงานศิลปะร่วมสมัยผสานเทคโนโลยี AI จัดโดย สมาคมสร้างสรรค์ปัญญาประดิษฐ์ไทย (AICAT) นิทรรศการที่รวบรวมการสร้างสรรค์ผลงานศิลปะในรูปแบบใหม่ ผ่านความร่วมมือระหว่างศิลปินและ AI Creator โดยมีศิลปินชั้นนำ เช่น Mac Patiphan (CGI Artist), ชาติ ชุมพร (ผู้วาด JOE the SEA-CRET Agent ), Gins (ศิลปินงานวาดภาพทุกประเภท) และ Taitern Flipped Face (Tech-pop artist) สร้างสรรค์ผลงานต้นฉบับ และเหล่า AI Creator ที่จะนำผลงานเหล่านั้นมาต่อยอดผ่านเครื่องมือ AI สมัยใหม่ ทั้ง AI Image Generation และ AI Video Generation เพื่อสร้างสรรค์ผลงานศิลปะรูปแบบใหม่ที่ผสมผสานระหว่างงานศิลปะดั้งเดิมและเทคโนโลยี พบกับการแปลงโฉมงานศิลปะผ่านเทคโนโลยี AI ในรูปแบบต่างๆ ร่วมสัมผัสประสบการณ์การผสมผสานระหว่างศิลปะและเทคโนโลยี AI ที่จะสร้างแรงบันดาลใจและเปิดมุมมองใหม่ในวงการศิลปะร่วมสมัย",
+    "categories": [
+        "Art & Design",
+        "Concert"
+    ],
+    "start_date": "24 ธันวาคม 2024",
+    "end_date": "12 มกราคม 2025",
+    "event_slot_time": "10:00–20:00",
+    "location": "หอศิลปวัฒนธรรมแห่งกรุงเทพมหานคร - Bacc",
+    "url": "https://www.facebook.com/baccpage",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/Synthetic_Muse_c80df3889d.jpg",
+    "ticket": "ไม่มีค่าเข้าชม",
+    "ticket_price": null,
+    "reliability_score": 2,
+    "timestamp": "2025-03-29 17:15:57",
+    "status": "past"
+}

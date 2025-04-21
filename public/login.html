@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" name="username" placeholder="Username" required><br><br>
+    <input type="password" name="password" placeholder="Password" required><br><br>
+    <button type="submit">Login</button>
+  </form>
+
+  <p id="message" style="color: red;"></p>
+
+  <!-- ✅ ปุ่มลืมรหัสผ่าน -->
+  <p>
+    <a href="/public/forgot_password.html">🔑 ลืมรหัสผ่าน?</a>
+  </p>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = new FormData(e.target);
+      const username = form.get('username');
+      const password = form.get('password');
+
+      try {
+        const res = await fetch('http://localhost:5000/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const text = await res.text();
+        let data;
+
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          alert('เกิดข้อผิดพลาดจากระบบ');
+          return;
+        }
+
+        if (!res.ok) {
+          alert(data.message || data.error || 'เข้าสู่ระบบไม่สำเร็จ');
+          return;
+        }
+
+        // ✅ เก็บ token
+        localStorage.setItem('token', data.token);
+
+        // ✅ ตรวจสอบ role
+        const meRes = await fetch('http://localhost:5000/auth/me', {
+          headers: {
+            'Authorization': 'Bearer ' + data.token
+          }
+        });
+
+        const me = await meRes.json();
+
+        if (me.role === 'admin') {
+          window.location.href = '/admin.html'; // ✅ ไปหน้าแอดมิน
+        } else {
+          window.location.href = '/home.html'; // ✅ ไปหน้า user ปกติ
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+      }
+    });
+
+  </script>
+</body>
+</html>

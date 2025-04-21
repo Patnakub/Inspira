@@ -1,0 +1,21 @@
+{
+    "title": "Night at Siriraj Medical Museum",
+    "description": "Night at Siriraj Medical Museumวันที่ 25 - 29 พฤศจิกายน 2567เวลา 17.00 - 19.00 น.ณ พิพิธภัณฑ์การแพทย์ศิริราชกลับมาอีกครั้งตามเสียงเรียกร้องของทุกท่าน...สำหรับกิจกรรม “Night at Siriraj Medical Museum” ปีนี้พิเศษกว่าปีไหน ๆ เพราะเป็นการเปิดให้เข้าชม พิพิธภัณฑ์กายวิภาค-คองดอนยามค่ำคืนครั้งแรก พร้อมจุใจไปกับพิพิธภัณฑ์การแพทย์ศิริราช ซื้อบัตรเข้าชม ผ่านระบบออนไลน์ล่วงหน้าเท่านั้นเด็กอายุไม่เกิน 18 ปี บัตรเข้าชมราคา 50 บาทผู้ใหญ่ บัตรเข้าชมราคา 100 บาทมีวิทยากรบรรยาย จำกัด 140 คน ต่อวันเท่านั้นเริ่มจำหน่ายบัตร 12 พฤศจิกายน 2567 เวลา 9.00 น. เป็นต้นไป จนกว่าบัตรจะหมดเปิดให้จองรอบและซื้อบัตรเข้าชม https://forms.gle/uuGUbxeehAvU1qJo7",
+    "categories": [
+        "Art & Design",
+        "Concert"
+    ],
+    "start_date": "25 พฤศจิกายน 2024",
+    "end_date": "29 พฤศจิกายน 2024",
+    "event_slot_time": "17:00–19:00",
+    "location": "พิพิธภัณฑ์การแพทย์ศิริราช",
+    "url": "https://www.facebook.com/siriraj.museum",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/Night_at_Siriraj_Medical_Museum_5f35a80622.jpg",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        140
+    ],
+    "reliability_score": 2,
+    "timestamp": "2025-03-29 17:15:54",
+    "status": "past"
+}

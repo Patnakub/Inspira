@@ -1,0 +1,21 @@
+{
+    "title": "The Peech Man Show Concert",
+    "description": "The Peech Man Show Concertวันที่ 21 มิถุนายน 2568ณ CENTERPOINT ENTERTAINMENTยินดีต้อนรับทุกท่านเข้าสู่ ‘BLEND 285 Signature presents The Peech Man Show Concert’ พร้อมกันหรือยังกับคอนเสิร์ตใหญ่ครั้งแรกของ PURPEECHเปิดจำหน่ายบัตรวันที่ 15 มีนาคม 2568 ทาง www.theconcert.com หรือ The Concert Application ตั้งแต่เวลา 10:00 น. เป็นต้นไป บัตรราคา 3,500 (VIP) / 2,000 / 1,500 บาท (บัตรยืนทั้งหมด)VIP BENEFITSสิทธิ์ถ่ายรูป 1:1 กับ PURPEECH และเซ็นของจำนวน 1 ชิ้น (หลังคอนเสิร์ตจบ)special gift 1 ชิ้น",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "21 มิถุนายน 2025",
+    "end_date": "21 มิถุนายน 2025",
+    "event_slot_time": null,
+    "location": "Centerpoint Entertainment",
+    "url": "https://www.facebook.com/PURPEECH",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/The_Peech_Man_Show_Concert_4502336a3b.jpg",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1500,
+        3500
+    ],
+    "reliability_score": 2,
+    "timestamp": "2025-03-29 17:16:08",
+    "status": "upcoming"
+}

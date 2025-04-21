@@ -1,0 +1,24 @@
+{
+    "title": "เป๊ปซี่ พรีเซนต์ พร็อกซี เดอะเฟิร์ส คอนเสิร์ต 'แอกเซส'",
+    "description": "PEPSI Presents PROXIE The 1st Concert 'ACCESS' คอนเสิร์ตเต็มรูปแบบครั้งแรกของ 'PROXIE' ที่จะขนความสนุก ความมันมามอบให้กับทุกคนอย่างเต็มที่ พร้อม ACCESS ทุกคนเข้าสู่โลกของพวกเขาพร้อมกัน 13 สิงหาคม 2566 นี้ ที่ธันเดอร์โดม เมืองทองธานี แล้วเจอกัน! ราคาบัตร : 5,700 / 4,700 / 3,700 / 2,700 / 1,900 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "13 สิงหาคม 2023",
+    "end_date": "13 สิงหาคม 2023",
+    "event_slot_time": "16:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/56849/",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1900,
+        2700,
+        3700,
+        4700,
+        5700
+    ],
+    "cover_picture": "null",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:26",
+    "status": "past"
+}

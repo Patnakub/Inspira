@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inspira - Search</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+    }
+    .header {
+      background-color: #fca5a5;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      margin: 0;
+      color: #111827;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+    }
+    .search-bar input {
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+    }
+    .search-bar button {
+      padding: 8px 12px;
+      background: #374151;
+      color: white;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+    .container {
+      padding: 20px;
+    }
+    .results-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #e5e7eb;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .card:hover {
+      outline: 2px solid #60a5fa;
+    }
+    .card h3 {
+      margin: 10px 0 5px;
+    }
+    .card p {
+      margin: 0;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>INSPIRA</h1>
+    <button onclick="window.location.href='home.html'">กลับหน้า Home</button>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Find your Exhibition">
+      <button onclick="search()">🔍</button>
+    </div>
+    <div class="flex justify-end p-4 bg-white shadow">
+      <button id="accountBtn" class="text-blue-600 hover:underline text-sm">บัญชีผู้ใช้</button>
+    </div>    
+  </div>
+
+  <div class="container">
+    <div class="results-title" id="resultTitle">Search for something...</div>
+    <div class="grid" id="resultsGrid"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const accountBtn = document.getElementById('accountBtn');
+
+      accountBtn?.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          window.location.href = 'account.html';
+        } else {
+          alert('กรุณาเข้าสู่ระบบก่อน');
+        }
+      });
+    });
+
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+  
+    async function performSearch(keyword) {
+      if (!keyword) return;
+  
+      const res = await fetch(`http://localhost:5000/exhibitions/search?q=${encodeURIComponent(keyword)}`);
+      const data = await res.json();
+  
+      const resultTitle = document.getElementById('resultTitle');
+      resultTitle.innerText = `${data.length} Events for "${keyword}"`;
+  
+      const grid = document.getElementById('resultsGrid');
+      grid.innerHTML = '';
+  
+      if (data.length === 0) {
+        grid.innerHTML = '<p>No exhibitions found.</p>';
+        return;
+      }
+  
+      data.filter(item => item && item.title).forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.cursor = 'pointer';
+
+        // ✅ เพิ่มเนื้อหาใน card
+        card.innerHTML = `
+          <h3>${item.title}</h3>
+          <p>${item.location || '-'}</p>
+        `;
+
+        // ✅ เพิ่มลิงก์เมื่อคลิก
+        card.addEventListener('click', () => {
+          window.location.href = `exhibition.html?id=${item._id}`;
+        });
+
+        grid.appendChild(card);
+      });
+
+    }
+  
+    // เมื่อโหลดหน้า → ดึง keyword จาก URL แล้วค้นหาอัตโนมัติ
+    const initialKeyword = getQueryParam('q');
+    if (initialKeyword) {
+      document.getElementById('searchInput').value = initialKeyword;
+      performSearch(initialKeyword);
+    }
+  
+    // เมื่อกดปุ่ม 🔍 → ค้นหาใหม่
+    function search() {
+      const keyword = document.getElementById('searchInput').value.trim();
+      if (keyword) {
+        // โหลดหน้าใหม่พร้อม query string ใหม่
+        window.location.href = `search.html?q=${encodeURIComponent(keyword)}`;
+      }
+    }
+  </script>
+  
+
+</body>
+</html>

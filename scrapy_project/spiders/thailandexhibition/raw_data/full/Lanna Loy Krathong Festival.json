@@ -1,0 +1,21 @@
+{
+    "title": "Lanna Loy Krathong Festival",
+    "description": "Lanna Loy Krathong Festivalวันที่ 15 - 17 พฤศจิกายน 2567ณ สวนพักผ่อนเซ็นทรัลพาร์ค เซ็นทรัล พระราม 2ชาวพระราม 2 รอพบกับงานลอยกระทง ล้านนา ม่วนไจ๋! บรรยากาศภาคเหนือแบบอลังการประดับไปด้วยโคมล้านนากว่า 500 โคม พิเศษกว่านั้นเราจัดกิจกรรมมาให้กันแน่น ๆ ตลอด 3 วัน!กิจกรรมภายในงานมุมถ่ายรูปสวยๆที่จุด Check-in บ้านกาสะแลกินกันจุใจกับเมนูเด็ดกว่า 100 เมนูเพลิดเพลินกับ Workshop เพ้นท์ โคมแขวนประกวดหนูน้อยนพมาศชิงเงินรางวัลรวม 20,000 บาทตระการตาอุโมงค์ตุงและโคมล้านนากว่า 500 โคมภายในงาน",
+    "categories": [
+        "Others",
+        "Concert"
+    ],
+    "start_date": "15 พฤศจิกายน 2024",
+    "end_date": "17 พฤศจิกายน 2024",
+    "event_slot_time": null,
+    "location": "เซ็นทรัล พระราม 2 - Central Rama 2",
+    "url": "https://www.facebook.com/CentralRama2Fanpage",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/Lanna_Loy_Krathong_Festival_ed90b7b328.jpg",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        20000
+    ],
+    "reliability_score": 2,
+    "timestamp": "2025-03-29 17:15:53",
+    "status": "past"
+}

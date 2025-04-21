@@ -1,0 +1,25 @@
+{
+    "title": "LYKN UNLEASHED CONCERT",
+    "description": "บัตรราคา: 6,000 / 5,000 / 4,500 / 4,000 / 3,500 / 3,000 / 2,500 / 2,000 / 1,500 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "21 กันยายน 2024",
+    "end_date": "21 กันยายน 2024",
+    "event_slot_time": "18:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.theconcert.com",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3000,
+        3500,
+        4000,
+        4500,
+        5000,
+        6000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/08-29-lykn-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:39",
+    "status": "past"
+}

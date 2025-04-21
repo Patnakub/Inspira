@@ -1,0 +1,23 @@
+{
+    "title": "BUS because of you i shineThe 1st Concert",
+    "description": "บัตรราคา: 6,500 / 5,500 / 4,500 / 3,500 / 2,500 / 1,500 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "14 มีนาคม 2025",
+    "end_date": "16 มีนาคม 2025",
+    "event_slot_time": "17:00",
+    "location": "Impact Arena",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/138343/bus-because-of-you-i-shinethe-1st-concert",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3500,
+        4500,
+        5500,
+        6500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2025/03-10-Bus-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:45",
+    "status": "past"
+}

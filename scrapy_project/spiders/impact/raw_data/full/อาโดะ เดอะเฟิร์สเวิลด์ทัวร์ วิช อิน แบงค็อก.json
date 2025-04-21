@@ -1,0 +1,23 @@
+{
+    "title": "อาโดะ เดอะเฟิร์สเวิลด์ทัวร์ วิช อิน แบงค็อก",
+    "description": "คอนเสิร์ตศิลปินญี่ปุ่น บัตรราคา: 4,500 (standing - โซน A(Q) ติดเวที) / 4,000 / 3,500 / 3,000 (standing - โซน B(GA)) บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "04 กุมภาพันธ์ 2024",
+    "end_date": "04 กุมภาพันธ์ 2024",
+    "event_slot_time": "19:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/60380/",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3000,
+        3500,
+        4000,
+        4500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/01-18-ado-wishinbangkok-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:32",
+    "status": "past"
+}

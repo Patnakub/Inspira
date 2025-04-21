@@ -1,0 +1,22 @@
+{
+    "title": "มาม่า Presents Ink Waruntorn ‘Close Up’ Concert",
+    "description": "คอนเสิร์ตไม่ใหญ่ ที่จะพาให้คุณได้ใกล้ชิดกับอิ้งค์แบบสุดๆ มาม่า Presents Ink Waruntorn ‘Close Up’ Concert ในบรรยากาศอบอุ่น เป็นกันเองแบบที่หาไม่ได้จากคอนเสิร์ตครั้งไหน ๆ กับทุกเพลงที่เรียบเรียงใหม่เพื่อคอนเสิร์ตนี้เท่านั้น3-7 กรกฎาคม 2024 (5 รอบการแสดง)Siam-Pic Ganesha Hallบัตรราคา 5,500/4,500/3,500/2,500/1,500 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "3 กรกฎาคม 2024",
+    "end_date": "7 กรกฎาคม 2024",
+    "event_slot_time": null,
+    "location": "โรงละครเคแบงก์สยามพิฆเนศ - KBank Siam Pic-Ganesha ",
+    "url": "https://www.facebook.com/KBankSiamPicGanesha",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/1_8_ink_concert_7498f8106b.jpg",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3500,
+        4500,
+        5500
+    ],
+    "reliability_score": 2,
+    "timestamp": "2025-03-29 17:15:36",
+    "status": "past"
+}

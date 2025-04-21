@@ -1,0 +1,24 @@
+{
+    "title": "PiXXiE Tales Concert : Welcome to PiXXiE Land",
+    "description": "เตรียมเดินทางสู่ดินแดนมหัศจรรย์ที่ไม่เคยมีใครได้เห็น ดินแดนที่จะทำให้คุณต้องมนต์ด้วยความตื่นตาตื่นใจและน่าหลงใหล #PiXXiE \n#PiXXiE_1stConcert \n#PiXXiETalesConcert บัตรราคา: 5,000 (Zone A) / 3,500 (Zone B) / 3,000 (Zone C) / 2,500 (Zone D) / 1,500 (Zone E) บาท",
+    "categories": [
+        "Concert",
+        "Others"
+    ],
+    "start_date": "31 สิงหาคม 2024",
+    "end_date": "31 สิงหาคม 2024",
+    "event_slot_time": "18:00 - 21:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/126743/pixxie-tales-concert-welcome-to-pixxie-land",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1500,
+        3000,
+        3500,
+        5000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/07-19-pixxie-tales-concert-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:37",
+    "status": "past"
+}

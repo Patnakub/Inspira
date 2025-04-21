@@ -1,0 +1,24 @@
+{
+    "title": "Christina Q Concert",
+    "description": "บัตรราคา: 5,500 / 5,000 / 4,500 / 4,000 / 3,000 / 2,500 / 2,000 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "09 ธันวาคม 2023",
+    "end_date": "09 ธันวาคม 2023",
+    "event_slot_time": "18:00",
+    "location": "Impact Arena",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/58866/christina-q-concert",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3000,
+        4000,
+        4500,
+        5000,
+        5500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2023/11-30-christinaqconcert-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:30",
+    "status": "past"
+}

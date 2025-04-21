@@ -1,0 +1,23 @@
+{
+    "title": "(G)I-DLE WORLD TOUR [JUST ME ( )I-DLE] LIVE IN BANGKOK",
+    "description": "บัตรราคา  6,500 / 5,500 / 4,500 / 3,500 / 2,500 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "20 สิงหาคม 2022",
+    "end_date": "20 สิงหาคม 2022",
+    "event_slot_time": "18:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.facebook.com/BeHearNowKpop",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3500,
+        4500,
+        5500,
+        6500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2022/07-27-i-dle-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:15",
+    "status": "past"
+}

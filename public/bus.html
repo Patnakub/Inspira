@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nearby Bus Stops</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f7f9fb;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .bus-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .bus-stop {
+      border-bottom: 1px solid #eee;
+      padding: 12px 0;
+    }
+
+    .bus-stop:last-child {
+      border-bottom: none;
+    }
+
+    .bus-stop h3 {
+      margin: 0;
+      font-size: 1.1em;
+      color: #1d3557;
+    }
+
+    .info {
+      font-size: 0.95em;
+      color: #444;
+      margin-top: 4px;
+    }
+
+    .icon {
+      margin-right: 4px;
+    }
+
+    .price {
+      margin-top: 8px;
+      font-size: 1.1em;
+      color: #1d3557;
+    }
+    
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      z-index: 0; /* ป้องกันแผนที่ทับ */
+    }
+
+    #route-inputs {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    input, datalist, button {
+      margin: 4px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+    button {
+      background-color: #1d3557;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #457b9d;
+      transform: scale(1.02);
+    }
+
+    button:active {
+      background-color: #0b2545;
+      transform: scale(0.97);
+    }
+
+
+  </style>
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARUJc-U7xfVvWsV4LnguUoIZQcvoRM2ik"></script>
+</head>
+<body>
+  <button onclick="history.back()" style="margin-bottom: 16px; background-color: #1d3557; color: white; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer;">
+    ⬅️ กลับไปที่นิทรรศการ
+  </button>
+  <div class="main-container" style="display: flex; gap: 20px; max-width: 1200px; margin: auto;">
+    <!-- ซ้าย: ข้อมูลป้ายรถเมล์ -->
+    <div class="left-panel" style="flex: 1;">
+      <div class="bus-container">
+        <h2>🚍 Nearby Bus Stops</h2>
+        <div id="bus-list"></div>
+      </div>
+    </div>
+  
+    <!-- ขวา: แผนที่ -->
+    <div class="right-panel" style="flex: 1;">
+      <div id="route-inputs">
+        <input list="stop-suggestions" id="startStopInput" placeholder="พิมพ์ชื่อป้าย หรือใช้พิกัดปัจจุบัน">
+        <datalist id="stop-suggestions"></datalist>
+        <button onclick="useMyLocation()">📍 ใช้ตำแหน่งปัจจุบัน</button>
+        <button onclick="suggestRoutes()">🧭 แนะนำเส้นทาง</button>
+      </div>
+
+      <div id="route-results" style="margin-top: 20px; padding: 12px; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); max-width: 600px; margin-inline: auto;">
+        <h3 style="margin-bottom: 8px;">🚍 Suggested Routes</h3>
+        <div id="routes-display">กรุณาเลือกป้ายเริ่มต้น</div>
+      </div>      
+      
+      <h2 style="text-align:center;">🗺️ Map</h2>
+      <div id="map" style="width: 100%; height: 500px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08);"></div>
+    </div>
+  </div>
+  
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const exhibitionId = urlParams.get('id');
+  
+    let map;
+    let busMarkers = [];
+    let exhibitionMarker;  // เพิ่มตัวแปร global เพื่อเก็บหมุดนิทรรศการ
+
+    function initMap(centerLat, centerLng, stops = []) {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: centerLat, lng: centerLng },
+        zoom: 15,
+      });
+
+      exhibitionMarker = new google.maps.Marker({
+        position: { lat: centerLat, lng: centerLng },
+        map: map,
+        icon: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+        title: "📍 Exhibition Location"
+      });
+
+      stops.forEach((stop, index) => {
+        if (stop.latitude && stop.longitude) {
+          const marker = new google.maps.Marker({
+            position: { lat: stop.latitude, lng: stop.longitude },
+            map: map,
+            icon: "https://maps.google.com/mapfiles/ms/icons/bus.png",
+            title: stop.stop_name,
+          });
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<strong>${stop.stop_name}</strong><br>Distance: ${stop.distance} m`
+          });
+
+          marker.addListener("click", () => infoWindow.open(map, marker));
+          busMarkers.push({ marker, infoWindow });
+        }
+      });
+    }
+
+    // ✅ ใช้รอบเดียว
+    Promise.all([
+      fetch(`http://localhost:5000/exhibitions/${exhibitionId}/nearby-bus`).then(res => res.json()),
+      fetch(`http://localhost:5000/exhibitions/${exhibitionId}`).then(res => res.json())
+    ])
+    .then(([busStops, ex]) => {
+      const container = document.getElementById('bus-list');
+      container.innerHTML = '';
+
+      if (!Array.isArray(busStops)) {
+        throw new Error("Invalid busStops format");
+      }
+
+      const filteredStops = busStops.filter(stop =>
+        stop.routes && stop.routes.length > 0 &&
+        stop.min_price !== undefined && stop.max_price !== undefined
+      );
+
+      if (ex.latitude && ex.longitude) {
+        // ✅ สร้างแผนที่และหมุดก่อน
+        initMap(ex.latitude, ex.longitude, filteredStops);
+      }
+
+      exhibitionLatLng = { lat: ex.latitude, lng: ex.longitude };
+
+      if (filteredStops.length === 0) {
+        container.innerHTML = '<p>🚫 No nearby bus stops found.</p>';
+        return;
+      }
+
+      // ✅ แสดงรายการป้าย
+      filteredStops.slice(0, 10).forEach((stop, index) => {
+        const div = document.createElement('div');
+        div.className = 'bus-stop';
+        div.setAttribute('data-stop-id', stop.stop_id);
+
+        const routeList = Array.isArray(stop.routes)
+          ? Array.from(new Map(
+              stop.routes.map(route => {
+                const key = `${route.short_name}-${route.long_name}`;
+                return [key, route]; // ใช้ Map เพื่อกรองซ้ำ
+              })
+            ).values()).map(route => {
+              const shortName = route?.short_name || 'N/A';
+              const longName = route?.long_name || '';
+              return `<li class="ml-4 list-disc"><strong>สาย ${shortName}</strong> - ${longName}</li>`;
+            }).join('')
+          : '<li>ไม่มีข้อมูลเส้นทาง</li>';
+
+
+
+        let price;
+        if (typeof stop.min_price === 'number' && typeof stop.max_price === 'number') {
+          if (stop.min_price === 0 && stop.max_price === 0) {
+            price = 'ยังไม่มีข้อมูล';
+          } else if (stop.min_price === stop.max_price) {
+            price = `${stop.min_price} Baht`;
+          } else {
+            price = `${stop.min_price} - ${stop.max_price} Baht`;
+          }
+        } else {
+          price = 'ยังไม่มีข้อมูล';
+        }
+
+        div.innerHTML = `
+         <h3><strong>🅿️ ${index + 1}.</strong> ${stop.stop_name}</h3>
+          <div class="info"><span class="icon">📏</span>Distance: <strong>${stop.distance}</strong> meters</div>
+          <div class="info"><span class="icon">🚌</span>Routes:</div>
+          <ul class="mt-1">${routeList}</ul>
+          <div class="price">Fare: <strong>${price}</strong></div>
+        `;
+
+        container.appendChild(div);
+      });
+    })
+
+
+    .catch(err => {
+      console.error('Error loading data:', err);
+      document.getElementById('bus-list').innerHTML = '<p>❌ Failed to load bus stop data.</p>';
+    });
+
+    let allStops = []; // สำหรับ autocomplete
+    let exhibitionLatLng = null;
+
+    // โหลดชื่อป้ายทั้งหมด (สำหรับ autocomplete)
+    fetch('http://localhost:5000/bus-routes/all-stops')
+      .then(res => res.json())
+      .then(data => {
+        allStops = data;
+
+        const datalist = document.getElementById('stop-suggestions');
+        datalist.innerHTML = data.map(stop =>
+          `<option value="${stop.stop_name}"></option>`
+        ).join('');
+      });
+
+
+    function useMyLocation() {
+      navigator.geolocation.getCurrentPosition(pos => {
+        document.getElementById('startStopInput').value = `@${pos.coords.latitude},${pos.coords.longitude}`;
+      }, err => {
+        alert('ไม่สามารถเข้าถึงพิกัดของคุณได้');
+      });
+    }
+
+    function displayRoutes(data) {
+      const resultContainer = document.getElementById('routes-display');
+
+      if (!Array.isArray(data) || data.length === 0) {
+        resultContainer.innerHTML = `<p style="color:red;">${data?.message || 'ไม่พบเส้นทาง'}</p>`;
+        return;
+      }
+
+      // 🔄 รวมกลุ่มตาม get_on และ get_off
+      const grouped = {};
+      data.forEach(route => {
+        const key = `${route.get_on}___${route.get_off}`;
+        if (!grouped[key]) {
+          grouped[key] = {
+            get_on: route.get_on,
+            get_off: route.get_off,
+            get_off_distance: route.get_off_distance,
+            routes: []
+          };
+        }
+        if (Array.isArray(route.routes)) {
+          grouped[key].routes.push(...route.routes);
+        } else if (route.route) {
+          grouped[key].routes.push(route.route); // fallback กรณีมีแค่ route เดียว
+        } else {
+          grouped[key].routes.push(null); // ใส่ null ไว้แสดงว่าไม่มีข้อมูล
+        }
+
+      });
+
+      const html = Object.values(grouped).map((group, i) => {
+        // 🔽 กรองสายซ้ำออกก่อน render
+        const uniqueRoutes = Array.from(
+          new Map(group.routes.map(r => [`${r?.short_name}-${r?.long_name}`, r])).values()
+        );
+
+        return `
+          <div style="margin-bottom: 12px; padding: 10px; background: #f1f5f9; border-radius: 8px;">
+            <div><strong>📍 ขึ้นที่:</strong> ${group.get_on}</div>
+            <div><strong>🎯 ลงที่:</strong> ${group.get_off} <small>(ห่างจากจุดหมาย: ${group.get_off_distance} เมตร)</small></div>
+            <div><strong>🚌 สายที่สามารถนั่งได้:</strong></div>
+            <ul class="ml-4 list-disc">
+              ${uniqueRoutes.map(r => {
+                if (!r) return `<li>❌ ไม่พบข้อมูลเส้นทาง</li>`;
+                return `<li><strong>สาย ${r.short_name || 'ไม่ทราบ'}</strong> - ${r.long_name || ''}</li>`;
+              }).join('')}
+            </ul>
+          </div>
+        `;
+      }).join('');
+
+
+
+      resultContainer.innerHTML = html;
+    }
+
+
+
+    function suggestRoutes() {
+      const input = document.getElementById('startStopInput').value.trim();
+      const resultContainer = document.getElementById('routes-display');
+
+      if (!exhibitionLatLng) {
+        alert('ยังไม่พบพิกัดนิทรรศการ');
+        return;
+      }
+
+      if (input.startsWith('@')) {
+        // พิกัด
+        const parts = input.slice(1).split(',');
+        if (parts.length !== 2) {
+          resultContainer.innerHTML = `<p style="color:red;">รูปแบบพิกัดไม่ถูกต้อง</p>`;
+          return;
+        }
+        const [lat, lng] = parts.map(parseFloat);
+
+        const url = `http://localhost:5000/bus-routes/suggest-route?lat=${lat}&lng=${lng}&exLat=${exhibitionLatLng.lat}&exLng=${exhibitionLatLng.lng}`;
+        fetch(url)
+          .then(res => res.json())
+          .then(displayRoutes)
+          .catch(err => {
+            console.error(err);
+            resultContainer.innerHTML = `<p style="color:red;">เกิดข้อผิดพลาดในการค้นหาเส้นทาง</p>`;
+          });
+
+      } else {
+        // กรณีพิมพ์ชื่อป้าย → หา stop_id จาก allStops ทั้งหมด
+        const matchedStop = allStops.find(stop => stop.stop_name === input);
+
+        if (!matchedStop) {
+          resultContainer.innerHTML = `<p style="color:red;">ไม่พบป้ายที่คุณกรอกในระบบ</p>`;
+          return;
+        }
+
+        // ส่ง stop_id ไป backend
+        fetch(`http://localhost:5000/bus-routes/suggest-route?exLat=${exhibitionLatLng.lat}&exLng=${exhibitionLatLng.lng}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userStops: [matchedStop.stop_id] })
+        })
+          .then(res => res.json())
+          .then(displayRoutes)
+          .catch(err => {
+            console.error(err);
+            resultContainer.innerHTML = `<p style="color:red;">เกิดข้อผิดพลาดในการค้นหาเส้นทาง</p>`;
+          });
+      }
+    }
+
+
+
+  </script>
+  
+</body>
+</html>

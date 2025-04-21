@@ -1,0 +1,26 @@
+{
+    "title": "THE KINGDOMS CONCERT",
+    "description": "\"THE CONCERT APPLICATION Presents THE KINGDOMS CONCERT” \nซื้อบัตรได้ที่ : https://www.theconcert.com/concerts/the-kingdoms-concert บัตรราคา: 7,000 / 6,500 / 5,500 / 5,000 / 4,500 / 4,000 / 3,000 / 2,500 / 2,000 บาท (All Seating)",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "01 มิถุนายน 2024",
+    "end_date": "02 มิถุนายน 2024",
+    "event_slot_time": "19:00",
+    "location": "Impact Arena",
+    "url": "https://www.facebook.com/thekingdomsconcert",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3000,
+        4000,
+        4500,
+        5000,
+        5500,
+        6500,
+        7000
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/05-13-the-kingdoms-concert-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:35",
+    "status": "past"
+}

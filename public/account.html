@@ -1,0 +1,37 @@
+<!-- public/account.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Account</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen px-6 py-8">
+
+  <!-- ✅ ปุ่มจัดฝั่งขวาสุดและเรียงแนวนอน -->
+  <div class="flex justify-end gap-3 mb-4">
+    <a href="change_password.html" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm">
+      เปลี่ยนรหัสผ่าน
+    </a>
+    <button id="logoutBtn" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 text-sm">
+      ออกจากระบบ
+    </button>
+  </div>
+
+  <a href="home.html" class="inline-block mb-6 text-blue-600 hover:underline text-sm">&larr; กลับหน้า Home</a>
+
+  <div class="max-w-4xl mx-auto py-10 px-6">
+    <h1 class="text-3xl font-bold mb-6 text-blue-800">MY FAVORITE EXHIBITIONS</h1>
+    <div id="favorite-container" class="grid grid-cols-2 md:grid-cols-3 gap-6">
+      <!-- การ์ดรายการ Favorite จะแสดงตรงนี้ -->
+    </div>
+
+    <h1 class="text-2xl font-bold mb-6">MY REVIEW</h1>
+    <div id="reviewedExhibitions" class="space-y-6">
+      <!-- รีวิวของผู้ใช้จะแสดงตรงนี้ -->
+    </div>
+  </div>
+
+  <script src="js/account.js"></script>
+</body>
+</html>

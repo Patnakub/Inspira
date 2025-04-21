@@ -1,0 +1,23 @@
+{
+    "title": "KANGDANIEL CONCERT FIRSTPARADE IN BANGKOK",
+    "description": "บัตรราคา 6,900 / 5,900 (ยืน) / 4,500 / 3,500 / 2,500 บาท",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "19 พฤศจิกายน 2022",
+    "end_date": "20 พฤศจิกายน 2022",
+    "event_slot_time": "18:00 / 17:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.impact.co.th/index.php/visitor/event_detail/th/54992/kangdaniel-concert-firstparade-in-bangkok",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        3500,
+        4500,
+        5900,
+        6900
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2022/10-20-kangdaniel-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:18",
+    "status": "past"
+}

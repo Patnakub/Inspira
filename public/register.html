@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+</head>
+<body>
+  <h2>Register</h2>
+  <form id="registerForm">
+    <input type="text" name="username" placeholder="Username" required><br>
+    <input type="password" name="password" placeholder="Password" required><br>
+    <input type="email" name="email" placeholder="Email" required><br>
+
+
+    <label>Gender:</label><br>
+    <input type="radio" name="gender" value="male" required> Male
+    <input type="radio" name="gender" value="female"> Female<br><br>
+
+    <label>Birthdate:</label><br>
+    <input type="date" name="birthdate" required><br><br>
+
+    <label>Interests (เลือกได้สูงสุด 3):</label><br>
+    <div id="categories"></div>
+
+    <button type="submit">Register</button>
+  </form>
+    <h3>ยังไม่ได้รับอีเมลยืนยัน?</h3>
+    <form id="resendForm">
+      <input type="email" name="email" placeholder="Email" required />
+      <button type="submit">ส่งลิงก์ยืนยันอีกครั้ง</button>
+    </form>
+
+  <script>
+    // โหลด category จาก API
+    fetch('http://localhost:5000/categories')
+    .then(res => res.json())
+    .then(categories => {
+      const container = document.getElementById('categories')
+      categories.forEach(cat => {
+        const checkbox = document.createElement('input')
+        checkbox.type = 'checkbox'
+        checkbox.name = 'interests'
+        checkbox.value = cat.name
+        checkbox.onchange = limitChecked
+        container.appendChild(checkbox)
+
+        const label = document.createElement('label')
+        label.textContent = cat.name
+        container.appendChild(label)
+
+        container.appendChild(document.createElement('br'))
+      })
+    })
+
+    function limitChecked() {
+      const checked = document.querySelectorAll('input[name="interests"]:checked')
+      if (checked.length > 3) this.checked = false
+    }
+
+    // ส่งข้อมูลแบบ JSON
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const form = new FormData(e.target)
+      const body = {
+        username: form.get('username'),
+        password: form.get('password'),
+        email: form.get('email'),
+        gender: form.get('gender'),
+        birthdate: form.get('birthdate'),
+        interests: form.getAll('interests')
+      }
+
+      const res = await fetch('http://localhost:5000/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+
+      const result = await res.json()
+      alert(result.msg || result.error)
+    })
+
+    // ส่ง email อีกครั้ง
+    document.getElementById('resendForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const res = await fetch('http://localhost:5000/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.get('email') })
+      });
+      const data = await res.json();
+      alert(data.message || data.error);
+  });
+  </script>
+</body>
+</html>

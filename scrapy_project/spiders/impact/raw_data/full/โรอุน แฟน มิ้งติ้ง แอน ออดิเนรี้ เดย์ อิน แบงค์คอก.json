@@ -1,0 +1,25 @@
+{
+    "title": "โรอุน แฟน มิ้งติ้ง แอน ออดิเนรี้ เดย์ อิน แบงค์คอก",
+    "description": "แฟนมีตติ้ง บัตรราคา: 6,500 / 5,300 / 4,300 / 3,300 / 2,800 บาท",
+    "categories": [
+        "Concert",
+        "Others"
+    ],
+    "start_date": "27 มกราคม 2024",
+    "end_date": "27 มกราคม 2024",
+    "event_slot_time": "18:00",
+    "location": "Impact Thunder Dome",
+    "url": "https://www.starphoenixthailand.co.th",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        2800,
+        3300,
+        4300,
+        5300,
+        6500
+    ],
+    "cover_picture": "https://www.impact.co.th/userfiles/images/Event_calendar/2024/01-26-2024rowoon-L.jpg",
+    "reliability_score": 5,
+    "timestamp": "2025-03-29 17:14:31",
+    "status": "past"
+}
