@@ -11,7 +11,7 @@ const register = async (req, res) => {
 
     const existing = await User.findOne({ username: body.username });
     if (existing) {
-      return res.status(400).json({ msg: 'Username already exists' });
+      return res.status(400).json({ msg: 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว' });
     }
 
     const hashed = await bcrypt.hash(body.password, 10);
@@ -59,7 +59,7 @@ const register = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ msg: 'Registered successfully. Please check your email to verify.' });
+    res.status(201).json({ msg: 'สมัครสมาชิกสำเร็จ กรุณาตรวจสอบอีเมลเพื่อยืนยันตัวตน' });
   } catch (err) {
     console.error('❌ Register error:', err.message);
     res.status(500).json({ error: err.message });
@@ -76,7 +76,7 @@ const verifyEmail = async (req, res) => {
       verifyTokenExpire: { $gt: new Date() }
     });
 
-    if (!user) return res.status(400).send('❌ Invalid or expired token');
+    if (!user) return res.status(400).send('❌ ลิงก์ไม่ถูกต้องหรือหมดอายุแล้ว');
 
     user.isEmailVerified = true;
     user.verifyToken = null;
@@ -97,8 +97,8 @@ const resendVerification = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'Email not found' });
-    if (user.isEmailVerified) return res.status(400).json({ message: 'Email already verified' });
+    if (!user) return res.status(404).json({ message: 'ไม่พบอีเมลนี้ในระบบ' });
+    if (user.isEmailVerified) return res.status(400).json({ message: 'อีเมลนี้ได้รับการยืนยันแล้ว' });
 
     // ✅ Debug
     const token = crypto.randomBytes(32).toString('hex');
@@ -129,7 +129,7 @@ const resendVerification = async (req, res) => {
     });
 
     await transporter.sendMail(mailOptions);
-    res.json({ message: 'Verification email sent again.' });
+    res.json({ message: 'ส่งอีเมลยืนยันอีกครั้งเรียบร้อยแล้ว' });
   } catch (err) {
     console.error('❌ Resend error:', err.message);
     res.status(500).json({ error: 'Server error: ' + err.message });
@@ -145,7 +145,7 @@ const requestReset = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'Email not found' });
+    if (!user) return res.status(404).json({ message: 'ไม่พบอีเมลนี้ในระบบ' });
 
     const pin = Math.floor(100000 + Math.random() * 900000).toString(); // 6 หลัก
     const expire = new Date(Date.now() + 10 * 60 * 1000); // หมดอายุใน 10 นาที
@@ -172,7 +172,7 @@ const requestReset = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.json({ message: 'PIN sent to your email' });
+    res.json({ message: 'ส่งรหัส PIN ไปยังอีเมลเรียบร้อยแล้ว' });
   } catch (err) {
     console.error('❌ Reset error:', err.message);
     res.status(500).json({ error: 'Server error' });
@@ -185,11 +185,14 @@ const confirmReset = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'Email not found' });
+    if (!user) return res.status(404).json({ message: 'ไม่พบอีเมลนี้ในระบบ' });
 
     if (user.resetPin !== pin || new Date() > user.resetPinExpire) {
-      return res.status(400).json({ message: 'Invalid or expired PIN' });
+      return res.status(400).json({ message: 'รหัส PIN ไม่ถูกต้องหรือหมดอายุแล้ว' });
     }
+    if (newPassword === '__dummy__') {
+      return res.json({ verified: true, message: 'PIN ถูกต้อง' });
+    }    
 
     const hashed = await bcrypt.hash(newPassword, 10);
     user.password = hashed;
@@ -197,7 +200,7 @@ const confirmReset = async (req, res) => {
     user.resetPinExpire = null;
     await user.save();
 
-    res.json({ message: 'Password has been reset successfully' });
+    res.json({ message: 'เปลี่ยนรหัสผ่านใหม่เรียบร้อยแล้ว' });
   } catch (err) {
     console.error('❌ Confirm reset error:', err.message);
     res.status(500).json({ error: 'Server error' });
@@ -211,14 +214,14 @@ const login = async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ username });
-    if (!user) return res.status(400).json({ message: 'User not found' });
+    if (!user) return res.status(400).json({ message: 'ไม่พบผู้ใช้นี้ในระบบ' });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!isMatch) return res.status(401).json({ message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
 
 
     if (!user.isEmailVerified) {
-      return res.status(403).json({ message: 'Please verify your email first' });
+      return res.status(403).json({ message: 'กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ' });
     }
 
     const token = jwt.sign({
