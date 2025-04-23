@@ -120,7 +120,7 @@ exports.suggestRouteFromStops = (req, res) => {
   const { userStops } = req.body;
   const { exLat, exLng } = req.query;
   if (!Array.isArray(userStops) || !exLat || !exLng) {
-    return res.status(400).json({ error: "Missing stop data or coordinates" });
+    return res.status(400).json({ error: "ยังไม่มีข้อมูลสถานที่นี้" });
   }
   return exports.suggestRoute(req, res);
 };
