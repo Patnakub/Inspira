@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
 const { getMe } = require('../controllers/auth.controller');
-const { register, login, requestReset, confirmReset, resendVerification, verifyEmail, changePassword } = require('../controllers/auth.controller');
+const { register, login, requestReset, confirmReset, resendVerification, verifyEmail, changePassword, checkDuplicate } = require('../controllers/auth.controller');
 
 // สมัครสมาชิก
 router.post('/register', register);
@@ -27,5 +27,9 @@ router.post('/change-password', auth, changePassword);
 
 // ✅ สำหรับ Admin
 router.get('/me', auth, getMe);
+
+// ✅ ตรวจข้อมูลซ้ำ
+router.post('/check-duplicate', checkDuplicate);
+
 
 module.exports = router;

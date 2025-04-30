@@ -44,7 +44,8 @@ const register = async (req, res) => {
     });
 
     const baseUrl = process.env.BASE_URL || "http://localhost:5000";
-    const verifyLink = `${baseUrl}/auth/verify-email?token=${token}`;
+    const clientBaseUrl = process.env.CLIENT_BASE_URL || "http://localhost:3000";
+    const verifyLink = `${clientBaseUrl}/verify-email?token=${token}`;
     const mailOptions = {
       from: process.env.EMAIL_USERNAME,
       to: body.email,
@@ -83,7 +84,7 @@ const verifyEmail = async (req, res) => {
     user.verifyTokenExpire = null;
     await user.save();
 
-    res.redirect('/verify_success.html'); 
+    res.json({ message: 'ยืนยันอีเมลสำเร็จแล้ว' });
   } catch (err) {
     console.error('Verify error:', err.message);
     res.status(500).send('❌ Server error');
@@ -93,32 +94,31 @@ const verifyEmail = async (req, res) => {
 // ✅ ฟังก์ชั่นส่งอีเมลอีกครั้ง
 const resendVerification = async (req, res) => {
   const { email } = req.body;
-  console.log('📬 Request resend for:', email);
-
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'ไม่พบอีเมลนี้ในระบบ' });
     if (user.isEmailVerified) return res.status(400).json({ message: 'อีเมลนี้ได้รับการยืนยันแล้ว' });
 
-    // ✅ Debug
+    // ✅ สร้าง token ใหม่
     const token = crypto.randomBytes(32).toString('hex');
-    console.log('🧪 New token:', token);
-
     user.verifyToken = token;
     user.verifyTokenExpire = new Date(Date.now() + 24 * 60 * 60 * 1000);
     await user.save();
 
-    const verifyLink = `http://localhost:5000/auth/verify-email?token=${token}`;
-    console.log('🔗 link:', verifyLink);
+    const clientBaseUrl = process.env.CLIENT_BASE_URL || "http://localhost:3000";
+    const verifyLink = `${clientBaseUrl}/verify-email?token=${token}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USERNAME,
       to: email,
       subject: 'Please verify your email',
-      html: `<h3>คลิกลิงก์เพื่อยืนยัน: <a href="${verifyLink}">ยืนยันอีเมล</a></h3>`
+      html: `
+        <h3>สวัสดี ${user.username}</h3>
+        <p>กรุณาคลิกปุ่มด้านล่างเพื่อยืนยันอีเมลของคุณ</p>
+        <a href="${verifyLink}" style="display:inline-block;padding:10px 20px;background:#4CAF50;color:white;text-decoration:none;">✅ ยืนยันอีเมล</a>
+        <p>หากปุ่มกดไม่ได้ ให้คลิกที่ลิงก์นี้: <br>${verifyLink}</p>
+      `
     };
-
-    console.log('📦 email options:', mailOptions);
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -130,13 +130,12 @@ const resendVerification = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
     res.json({ message: 'ส่งอีเมลยืนยันอีกครั้งเรียบร้อยแล้ว' });
+
   } catch (err) {
     console.error('❌ Resend error:', err.message);
-    res.status(500).json({ error: 'Server error: ' + err.message });
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในระบบ' });
   }
 };
-
-
 
 // ✅ ฟังก์ชั่น request pin
 
@@ -212,24 +211,32 @@ const confirmReset = async (req, res) => {
 // ✅ ฟังก์ชัน login
 const login = async (req, res) => {
   const { username, password } = req.body;
+  console.log('📥 login req.body:', req.body);
   try {
-    const user = await User.findOne({ username });
+    const cleanUsername = username.trim(); // ✅ ลบช่องว่าง
+    const user = await User.findOne({
+      $or: [{ username: cleanUsername }, { email: cleanUsername }],
+    });
+
     if (!user) return res.status(400).json({ message: 'ไม่พบผู้ใช้นี้ในระบบ' });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
 
-
     if (!user.isEmailVerified) {
       return res.status(403).json({ message: 'กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ' });
     }
 
-    const token = jwt.sign({
-      id: user._id,
-      role: user.role,
-      username: user.username
-    }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+        username: user.username,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
     res.json({
       token,
       user: {
@@ -239,12 +246,12 @@ const login = async (req, res) => {
         interests: user.interests,
       },
     });
-    
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 const changePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
@@ -273,6 +280,22 @@ const getMe = async (req, res) => {
   }
 };
 
+const checkDuplicate = async (req, res) => {
+  const { username, email } = req.body;
+  const existingUsername = await User.findOne({ username });
+  const existingEmail = await User.findOne({ email });
+
+  if (existingUsername) {
+    return res.status(409).json({ field: 'username', message: 'Username นี้ถูกใช้ไปแล้ว' });
+  }
+  if (existingEmail) {
+    return res.status(409).json({ field: 'email', message: 'Email นี้ถูกใช้ไปแล้ว' });
+  }
+
+  return res.json({ available: true });
+};
+
+
 
 
 // ✅ export ทั้งสองฟังก์ชัน
@@ -284,5 +307,6 @@ module.exports = {
   verifyEmail,
   resendVerification,
   changePassword,
-  getMe
+  getMe,
+  checkDuplicate
 };

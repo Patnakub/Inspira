@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   gender: {
     type: String,
     required: true,
-    enum: ['male', 'female'] // รับแค่ male หรือ female
+    enum: ['male', 'female','other'] // รับแค่ male หรือ female
   },
   birthdate: {
     type: Date,
