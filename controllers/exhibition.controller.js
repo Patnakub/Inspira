@@ -3,12 +3,25 @@ const elasticClient = require('../utils/elasticClient');
 
 exports.getAllExhibitions = async (req, res) => {
   try {
-    const exhibitions = await Exhibition.find().limit(50);
-    res.json(exhibitions);
+    const skip = parseInt(req.query.skip) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const exhibitions = await Exhibition.find()
+      .sort({ start_date_obj: 1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalCount = await Exhibition.countDocuments();
+
+    res.json({
+      total: totalCount,
+      data: exhibitions,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.searchExhibitions = async (req, res) => {
   const { q } = req.query;
@@ -66,7 +79,7 @@ exports.getUpcomingExhibitions = async (req, res) => {
     try {
       const upcoming = await Exhibition.find({ status: 'upcoming' })
       .sort({ start_date_obj: 1 })  // ใกล้วันจัดก่อน
-      .select('title location');
+      .select('title location cover_picture');
 
       res.json(upcoming);
     } catch (err) {

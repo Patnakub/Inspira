@@ -213,7 +213,6 @@ const confirmReset = async (req, res) => {
 // ✅ ฟังก์ชัน login
 const login = async (req, res) => {
   const { username, password } = req.body;
-  console.log('📥 login req.body:', req.body);
   try {
     const cleanUsername = username.trim(); // ✅ ลบช่องว่าง
     const user = await User.findOne({
