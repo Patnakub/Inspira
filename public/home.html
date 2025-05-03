@@ -223,7 +223,6 @@
         // แสดง recommendation section
         document.getElementById('recommendSection').style.display = 'block';
 
-        // 👉 โหลดข้อมูลจากเพื่อนหรือ mock แรก ๆ ได้เช่น
         loadRecommendation();
       }
 
@@ -509,30 +508,43 @@
     }
 
     async function loadRecommendation() {
-      const container = document.getElementById('recommendEvents');
-      container.innerHTML = ''; // ล้างของเก่า
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user?.id) {
+        document.getElementById("recommendEvents").innerHTML = "<p>ไม่พบข้อมูลผู้ใช้</p>";
+        return;
+      }
 
-      const placeholderImg = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/480px-No_image_available.svg.png";
+      try {
+        const res = await fetch(`http://localhost:5000/recommendations/${user.id}`);
+        const data = await res.json(); 
+        const container = document.getElementById("recommendEvents");
+        container.innerHTML = "";
 
-      const mockData = [
-        { _id: '1', title: 'Mock Exhibition A', cover_picture: '', location: 'Mock Hall 1' },
-        { _id: '2', title: 'Mock Exhibition B', cover_picture: '', location: 'Mock Center 2' },
-      ];
+        const limited = data.slice(0, 5);
+        if (limited.length === 0) {
+          container.innerHTML = "<p>ไม่มีคำแนะนำสำหรับคุณ</p>";
+          return;
+        }
 
-      mockData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <a href="exhibition.html?id=${item._id}" style="text-decoration: none; color: inherit;">
-            <img src="${item.cover_picture || placeholderImg}"
-                alt="${item.title}"
-                style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;" />
-            <h3>${item.title}</h3>
-            <p>${item.location}</p>
-          </a>
-        `;
-        container.appendChild(card);
-      });
+        limited.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <a href="exhibition.html?id=${item._id}" style="text-decoration:none;color:inherit;">
+              <img src="${item.cover_picture || 'https://via.placeholder.com/200x120'}"
+                  alt="${item.title}"
+                  style="width:100%;height:120px;object-fit:cover;border-radius:8px;">
+              <h3>${item.title}</h3>
+              <p>${item.location || '-'}</p>
+            </a>
+          `;
+          container.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error("❌ โหลดคำแนะนำล้มเหลว:", err);
+        document.getElementById("recommendEvents").innerHTML = "<p>เกิดข้อผิดพลาดในการโหลดคำแนะนำ</p>";
+      }
     }
 
 

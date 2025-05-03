@@ -59,6 +59,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // 🔁 เรียกใช้ cron แจ้งเตือนนิทรรศการใกล้จบ
 require('./cron/notifyEndingExhibitions');
+require('./cron/recommend_cron');
 
 
 // ✅ Mount routes
@@ -70,6 +71,8 @@ app.use('/favorites', favoriteRoutes);
 app.use('/reviews', reviewRoutes);
 app.use('/bus-routes', routeRoutes);
 app.use('/suggestions', suggestionRoutes);
+app.use('/recommendations', require('./routes/recommendation.routes'));
+
 
 // ✅ Static page routes (login, verify, admin, etc.)
 app.get('/', (req, res) => {

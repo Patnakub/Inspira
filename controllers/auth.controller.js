@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const generateForNewUser = require('../utils/generateSingleRecommendation');
 
 // ✅ ฟังก์ชั่น register
 const register = async (req, res) => {
@@ -33,6 +34,7 @@ const register = async (req, res) => {
     user.verifyTokenExpire = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 ชม.
 
     await user.save();
+    await generateForNewUser(user);
 
     // ✅ ส่งอีเมลยืนยัน
     const transporter = nodemailer.createTransport({

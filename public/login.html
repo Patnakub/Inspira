@@ -52,6 +52,9 @@
         // ✅ เก็บ token
         localStorage.setItem('token', data.token);
 
+        // ✅ เก็บ user
+        localStorage.setItem('user', JSON.stringify(data.user));
+
         // ✅ ตรวจสอบ role
         const meRes = await fetch('http://localhost:5000/auth/me', {
           headers: {
