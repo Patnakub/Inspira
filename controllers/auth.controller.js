@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const generateForNewUser = require('../utils/generateSingleRecommendation');
 
+
 // ✅ ฟังก์ชั่น register
 const register = async (req, res) => {
   try {
@@ -296,6 +297,35 @@ const checkDuplicate = async (req, res) => {
   return res.json({ available: true });
 };
 
+const checkSession = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.json({ isLoggedIn: false });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) return res.json({ isLoggedIn: false });
+
+    res.json({ isLoggedIn: true, user: { id: user._id, username: user.username } });
+  } catch (err) {
+    res.json({ isLoggedIn: false });
+  }
+};
+
+const getUserRecommendations = async (req, res) => {
+  const { userId } = req.params;
+
+  if (req.user.id !== userId) {
+    return res.status(403).json({ message: 'Unauthorized' });
+  }
+
+  // ดึง recommendation ตาม userId
+  const recommendations = await getRecommendationsForUser(userId); // สมมติว่า function นี้มีจริง
+  res.json(recommendations);
+};
+
+
 
 
 
@@ -309,5 +339,7 @@ module.exports = {
   resendVerification,
   changePassword,
   getMe,
-  checkDuplicate
+  checkDuplicate,
+  checkSession,
+  getUserRecommendations
 };

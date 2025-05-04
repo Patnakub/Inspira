@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
 const { getMe } = require('../controllers/auth.controller');
-const { register, login, requestReset, confirmReset, resendVerification, verifyEmail, changePassword, checkDuplicate } = require('../controllers/auth.controller');
+const { register, login, requestReset, confirmReset, resendVerification, verifyEmail, changePassword, checkDuplicate,checkSession } = require('../controllers/auth.controller');
 
 // สมัครสมาชิก
 router.post('/register', register);
@@ -31,5 +31,7 @@ router.get('/me', auth, getMe);
 // ✅ ตรวจข้อมูลซ้ำ
 router.post('/check-duplicate', checkDuplicate);
 
+// ✅ ตรวจ login
+router.get('/session', checkSession);
 
 module.exports = router;

@@ -74,6 +74,7 @@ app.use('/suggestions', suggestionRoutes);
 app.use('/recommendations', require('./routes/recommendation.routes'));
 
 
+
 // ✅ Static page routes (login, verify, admin, etc.)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
