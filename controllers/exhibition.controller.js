@@ -29,30 +29,46 @@ exports.searchExhibitions = async (req, res) => {
 
   try {
     const esResult = await elasticClient.search({
-      index: 'exhibitions',
+      index: 'exhibitions_th',
       query: {
-        multi_match: {
-          query: q,
-          fields: ['title^2', 'description'],
-          fuzziness: 'AUTO'
+        bool: {
+          should: [
+            {
+              multi_match: {
+                query: q,
+                fields: ['title^2', 'description'],
+                fuzziness: 'AUTO'
+              }
+            },
+            {
+              match: {
+                title: {
+                  query: q,
+                  analyzer: 'thai_analyzer'
+                }
+              }
+            },
+            {
+              match: {
+                description: {
+                  query: q,
+                  analyzer: 'thai_analyzer'
+                }
+              }
+            }
+          ]
         }
       },
-      size: 10
+      size: 20
     });
 
     const ids = esResult.hits.hits.map(hit => hit._id);
-
-    // 🔍 ดึงจาก MongoDB
     const exhibitions = await Exhibition.find({ _id: { $in: ids } });
 
-    // 🔁 สร้าง Map เพื่อเรียงตามลำดับของ Elasticsearch
     const exhibitionMap = new Map();
     exhibitions.forEach(ex => exhibitionMap.set(ex._id.toString(), ex));
 
-    // ✅ เรียงตามลำดับ และกรอง null
-    const orderedResults = ids
-      .map(id => exhibitionMap.get(id))
-      .filter(e => e !== undefined && e !== null); // 🔐 ป้องกัน null
+    const orderedResults = ids.map(id => exhibitionMap.get(id)).filter(Boolean);
 
     res.json(orderedResults);
   } catch (err) {

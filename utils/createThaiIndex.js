@@ -1,21 +1,18 @@
-// ติดตั้งด้วย: npm install @elastic/elasticsearch
 const { Client } = require('@elastic/elasticsearch');
 
-const client = new Client({
-  node: 'http://localhost:9200', // เปลี่ยน URL ตามที่ใช้งาน
-});
+const client = new Client({ node: 'http://localhost:9200' });
 
 async function createIndex() {
-  const indexName = 'exhibitions';
+  const indexName = 'exhibitions_th';
 
-  // ถ้ามี Index เดิมอยู่แล้ว ให้ลบทิ้งก่อน
-  const indexExists = await client.indices.exists({ index: indexName });
-  if (indexExists) {
-    console.log(`ℹ️ ลบ Index เดิม: ${indexName}`);
+  // ลบ index เดิมถ้ามี
+  const exists = await client.indices.exists({ index: indexName });
+  if (exists) {
     await client.indices.delete({ index: indexName });
+    console.log('🗑️ ลบ index เดิมแล้ว');
   }
 
-  // สร้าง Index ใหม่พร้อม Thai Analyzer
+  // สร้างใหม่
   await client.indices.create({
     index: indexName,
     body: {
@@ -39,27 +36,17 @@ async function createIndex() {
             type: 'text',
             analyzer: 'thai_analyzer'
           },
-          categories: {
-            type: 'keyword'
-          },
-          start_date: {
-            type: 'date'
-          },
-          end_date: {
-            type: 'date'
-          },
-          location: {
-            type: 'keyword'
-          },
-          status: {
-            type: 'keyword'
-          }
+          categories: { type: 'keyword' },
+          location: { type: 'keyword' },
+          status: { type: 'keyword' },
+          start_date: { type: 'date' },
+          end_date: { type: 'date' }
         }
       }
     }
   });
 
-  console.log(`✅ สร้าง Index '${indexName}' พร้อม Thai Analyzer สำเร็จ`);
+  console.log('✅ สร้าง index exhibitions_th พร้อม analyzer สำเร็จ');
 }
 
 createIndex().catch(console.error);
