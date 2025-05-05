@@ -16,6 +16,10 @@ const thaiMonths = {
 };
 
 function parseThaiDateToISO(str) {
+  if (dayjs(str, "YYYY-MM-DD", true).isValid()) {
+    return str; // ✅ รองรับกรณีเป็นฟอร์แมต ISO อยู่แล้ว
+  }
+
   const match = str?.match(/(\d{1,2}) ([ก-๙]+) (\d{4})/);
   if (!match) return null;
   const [_, d, m, y] = match;
@@ -23,6 +27,7 @@ function parseThaiDateToISO(str) {
   if (!mm) return null;
   return `${y}-${mm}-${d.padStart(2, "0")}`;
 }
+
 
 const transporter = nodemailer.createTransport({
   service: "gmail",

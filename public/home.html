@@ -509,18 +509,30 @@
 
     async function loadRecommendation() {
       const user = JSON.parse(localStorage.getItem("user"));
-      if (!user?.id) {
+      const token = localStorage.getItem("token");
+
+      if (!user?.id || !token) {
         document.getElementById("recommendEvents").innerHTML = "<p>ไม่พบข้อมูลผู้ใช้</p>";
         return;
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/recommendations/${user.id}`);
-        const data = await res.json(); 
+        const res = await fetch(`http://localhost:5000/recommendations/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errorText}`);
+        }
+
+        const data = await res.json();
         const container = document.getElementById("recommendEvents");
         container.innerHTML = "";
 
-        const limited = data.slice(0, 5);
+        const limited = Array.isArray(data) ? data.slice(0, 5) : [];
         if (limited.length === 0) {
           container.innerHTML = "<p>ไม่มีคำแนะนำสำหรับคุณ</p>";
           return;
@@ -546,6 +558,7 @@
         document.getElementById("recommendEvents").innerHTML = "<p>เกิดข้อผิดพลาดในการโหลดคำแนะนำ</p>";
       }
     }
+
 
 
     async function showFilteredExhibitions() {
