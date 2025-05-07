@@ -1,0 +1,55 @@
+name: Biweekly Sync Exhibitions + Recommend
+
+on:
+  schedule:
+    - cron: '0 0 */14 * *'  # ทุก 14 วัน เวลา 00:00 UTC (07:00 น ไทย)
+  workflow_dispatch:
+
+jobs:
+  sync-and-recommend:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout branch data-files
+      - name: Checkout data-files branch
+        uses: actions/checkout@v3
+        with:
+          ref: data-files
+
+      # Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Install Python dependencies
+      - name: Install dependencies
+        run: pip install pymongo dateparser requests
+
+      # Run Python scripts
+      - name: Run update scripts
+        run: |
+          python run_all_upcoming.py
+          python merge.py --mode upcoming
+          python upload_to_mongo.py
+
+      # Checkout backend branch (เข้ามาไว้ในโฟลเดอร์ backend)
+      - name: Checkout backend branch
+        uses: actions/checkout@v3
+        with:
+          ref: backend
+          path: backend
+
+      # Setup Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # Install backend dependencies
+      - name: Install backend dependencies
+        run: cd backend && npm install
+
+      # Run recommend_cron.js
+      - name: Run recommend_cron.js
+        run: cd backend && node cron/recommend_cron.js
