@@ -52,10 +52,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 // ✅ Connect MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('✅ Connected to MongoDB');
-    syncExhibitionsToElasticsearch(); // ดึงข้อมูลนิทรรศการทั้งหมดไปใส่ Elasticsearch
+    console.log("✅ Connected to MongoDB Cloud");
+    syncExhibitionsToElasticsearch();
   })
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
+
 
 // 🔁 เรียกใช้ cron แจ้งเตือนนิทรรศการใกล้จบ
 require('./cron/notifyEndingExhibitions');
