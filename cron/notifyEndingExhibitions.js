@@ -1,4 +1,3 @@
-const cron = require("node-cron");
 const mongoose = require("mongoose");
 const Exhibition = require("../models/Exhibition");
 const Favorite = require("../models/Favorite");
@@ -7,7 +6,7 @@ const NotificationLog = require("../models/NotificationLog");
 const nodemailer = require("nodemailer");
 const dayjs = require("dayjs");
 
-// ✅ เชื่อม MongoDB (ชั่วคราวแบบ hardcoded)
+// ✅ เชื่อม MongoDB (hardcoded ชั่วคราว)
 const MONGO_URI = "mongodb+srv://inspiraproject2025:ypLEu0xL3plfo2AW@exhibition-cluster.ty3ugcy.mongodb.net/exhibition_db";
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -29,7 +28,6 @@ function parseThaiDateToISO(str) {
   if (dayjs(str, "YYYY-MM-DD", true).isValid()) {
     return str;
   }
-
   const match = str?.match(/(\d{1,2}) ([ก-๙]+) (\d{4})/);
   if (!match) return null;
   const [_, d, m, y] = match;
@@ -38,7 +36,7 @@ function parseThaiDateToISO(str) {
   return `${y}-${mm}-${d.padStart(2, "0")}`;
 }
 
-// 📧 ตั้งค่า SMTP
+// 📧 ตั้งค่า SMTP สำหรับส่งอีเมล
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -56,7 +54,7 @@ async function sendEmail(to, subject, text) {
   });
 }
 
-// 🔔 ตรวจสอบนิทรรศการใกล้จบ
+// 🔔 ฟังก์ชันหลัก: ตรวจสอบนิทรรศการใกล้จบ
 async function notifyEndingSoon() {
   const today = dayjs();
   const threeDaysLater = today.add(3, "day");
@@ -95,5 +93,5 @@ async function notifyEndingSoon() {
   }
 }
 
-// 🔁 สำหรับทดสอบ: เรียกทันทีเมื่อรัน
+// 🟢 เรียกทันทีเมื่อ GitHub Actions รัน
 notifyEndingSoon();
