@@ -1,0 +1,26 @@
+name: Notify Ending Exhibitions
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # ทุกวันตอน 10:00 AM (03:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout backend branch
+        uses: actions/checkout@v3
+        with:
+          ref: backend
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run notifyEndingExhibitions.js
+        run: node cron/notifyEndingExhibitions.js
