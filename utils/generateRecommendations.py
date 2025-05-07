@@ -25,10 +25,9 @@ events_df = pd.DataFrame(exhibitions)
 events_df['_id'] = events_df['_id'].astype(str)
 events_df = events_df.rename(columns={'_id': 'event_id'})
 
-# ตรวจว่ามี categories ครบมั้ย (ถ้าไม่ → ใส่ 0)
+# สร้างเวกเตอร์หมวดหมู่จาก field 'categories'
 for c in categories:
-    if c not in events_df.columns:
-        events_df[c] = 0
+    events_df[c] = events_df['categories'].apply(lambda lst: int(c in lst) if isinstance(lst, list) else 0)
 
 # 🧠 ดึงผู้ใช้ทั้งหมด
 users = list(users_col.find({}))

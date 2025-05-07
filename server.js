@@ -50,7 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // ✅ Connect MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
     syncExhibitionsToElasticsearch(); // ดึงข้อมูลนิทรรศการทั้งหมดไปใส่ Elasticsearch

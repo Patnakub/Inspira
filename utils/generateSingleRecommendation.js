@@ -1,38 +1,59 @@
-// utils/generateSingleRecommendation.js
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const cosineSimilarity = require("compute-cosine-similarity");
 require("dotenv").config();
 
 module.exports = async function generateForNewUser(user) {
-  const client = new MongoClient(process.env.MONGO_URI);
-  await client.connect();
+  const client = new MongoClient(process.env.MONGODB_URI);
 
-  const db = client.db("exhibition_db");
-  const exhibitionsCol = db.collection("exhibitions");
-  const recommendationsCol = db.collection("recommendations");
+  try {
+    await client.connect();
+    const db = client.db("exhibition_db");
+    const exhibitionsCol = db.collection("exhibitions");
+    const recommendationsCol = db.collection("recommendations");
 
-  const exhibitions = await exhibitionsCol.find({ status: { $in: ["ongoing", "upcoming"] } }).toArray();
-  if (exhibitions.length === 0) return;
+    const exhibitions = await exhibitionsCol.find({ status: { $in: ["ongoing", "upcoming"] } }).toArray();
+    if (exhibitions.length === 0) return;
 
-  const categories = await db.collection("categories").find().toArray();
-  const categoryNames = categories.map(c => c.name);
+    const categories = await db.collection("categories").find().toArray();
+    const categoryNames = categories
+      .map(c => typeof c.name === 'string' ? c.name.trim() : null)
+      .filter(Boolean);
 
-  const userVec = categoryNames.map(cat => user.interests?.includes(cat) ? 1 : 0);
+    const interests = Array.isArray(user.interests)
+      ? user.interests
+          .filter(i => typeof i === 'string')
+          .map(i => i.trim())
+          .filter(i => categoryNames.includes(i))
+      : [];
 
-  const results = exhibitions.map(ex => {
-    const exVec = categoryNames.map(cat => ex[cat] || 0);
-    const score = cosineSimilarity(userVec, exVec);
-    return { event_id: ex._id.toString(), score: parseFloat(score.toFixed(4)) };
-  });
+    const userVec = categoryNames.map(cat => interests.includes(cat) ? 1 : 0);
 
-  results.sort((a, b) => b.score - a.score);
+    const results = exhibitions.map(ex => {
+      const exCats = Array.isArray(ex.categories)
+        ? ex.categories.filter(c => typeof c === 'string')
+        : [];
 
-  await recommendationsCol.insertOne({
-    user_id: user._id.toString(),
-    recommendations: results,
-    updated_at: new Date()
-  });
+      const exVec = categoryNames.map(cat => exCats.includes(cat) ? 1 : 0);
 
-  await client.close();
-  console.log("✅ Recommendation สำหรับผู้ใช้ใหม่ถูกสร้างแล้ว");
+      const score = cosineSimilarity(userVec, exVec);
+      return {
+        event_id: ex._id.toString(),
+        score: parseFloat(score.toFixed(4))
+      };
+    });
+
+    results.sort((a, b) => b.score - a.score);
+
+    await recommendationsCol.insertOne({
+      user_id: user._id?.toString() || '',
+      recommendations: results,
+      updated_at: new Date()
+    });
+
+    console.log("✅ Recommendation สำหรับผู้ใช้ใหม่ถูกสร้างแล้ว");
+  } catch (err) {
+    console.error("❌ Error in generateForNewUser:", err.message);
+  } finally {
+    await client.close();
+  }
 };

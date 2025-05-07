@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const generateForNewUser = require('../utils/generateSingleRecommendation');
+const { MongoClient } = require("mongodb");
 
 
 // ✅ ฟังก์ชั่น register
@@ -17,6 +18,22 @@ const register = async (req, res) => {
     }
 
     const hashed = await bcrypt.hash(body.password, 10);
+    const uri = process.env.MONGODB_URI || "mongodb://localhost:27017";
+    const client = new MongoClient(uri);
+    await client.connect();
+    const db = client.db("exhibition_db");
+
+    const categoryList = (await db.collection("categories").find().toArray())
+      .map(c => typeof c.name === 'string' ? c.name.trim() : '')
+      .filter(name => name.length > 0);
+
+
+    const interestsCleaned = Array.isArray(body.interests)
+      ? body.interests
+          .filter(i => typeof i === 'string')
+          .map(i => i.trim())
+          .filter(i => categoryList.includes(i))
+      : [];
 
     const user = new User({
       username: body.username,
@@ -24,20 +41,23 @@ const register = async (req, res) => {
       email: body.email,
       gender: body.gender,
       birthdate: body.birthdate,
-      interests: body.interests,
+      interests: interestsCleaned,
       created_at: new Date(),
       updated_at: new Date(),
     });
 
-    // ✅ สร้าง token ยืนยัน
     const token = crypto.randomBytes(32).toString('hex');
     user.verifyToken = token;
-    user.verifyTokenExpire = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 ชม.
+    user.verifyTokenExpire = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     await user.save();
-    await generateForNewUser(user);
+    try {
+      await generateForNewUser(user.toObject());
+    } catch (err) {
+      console.error("❌ Error in generateForNewUser:", err.message);
+    }
+    
 
-    // ✅ ส่งอีเมลยืนยัน
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -46,7 +66,6 @@ const register = async (req, res) => {
       },
     });
 
-    const baseUrl = process.env.BASE_URL || "http://localhost:5000";
     const clientBaseUrl = process.env.CLIENT_BASE_URL || "http://localhost:3000";
     const verifyLink = `${clientBaseUrl}/verify-email?token=${token}`;
     const mailOptions = {
@@ -62,8 +81,9 @@ const register = async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-
+    await client.close();
     res.status(201).json({ msg: 'สมัครสมาชิกสำเร็จ กรุณาตรวจสอบอีเมลเพื่อยืนยันตัวตน' });
+
   } catch (err) {
     console.error('❌ Register error:', err.message);
     res.status(500).json({ error: err.message });
