@@ -2,7 +2,7 @@ name: Notify Ending Exhibitions
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # ทุกวันตอน 10:00 AM (03:00 UTC)
+    - cron: '0 3 * * *'  # ทุกวันตอน 10:00 AM. (03:00 UTC)
   workflow_dispatch:
 
 jobs:
