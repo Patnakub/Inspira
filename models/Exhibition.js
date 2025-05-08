@@ -31,15 +31,23 @@ const ExhibitionSchema = new mongoose.Schema({
 });
 
 ExhibitionSchema.post('save', function () {
-  syncExhibitionToElastic(this);
+  trySyncToElastic(this);
 });
 
 ExhibitionSchema.post('findOneAndUpdate', function (doc) {
-  if (doc) syncExhibitionToElastic(doc);
+  if (doc) trySyncToElastic(doc);
 });
 
 ExhibitionSchema.index({ start_date_obj: 1 });
 ExhibitionSchema.index({ end_date_obj: 1 });
 
+function trySyncToElastic(doc) {
+  if (!process.env.SKIP_ELASTIC_SYNC && process.env.ELASTIC_NODE) {
+    const { syncExhibitionToElastic } = require('../utils/elasticSync');
+    syncExhibitionToElastic(doc);
+  } else {
+    console.warn("⚠️ SKIP_ELASTIC_SYNC is set or ELASTIC_NODE missing — skipping sync.");
+  }
+}
 
 module.exports = mongoose.model('Exhibition', ExhibitionSchema);

@@ -1,42 +1,16 @@
+require("dotenv").config();
+
 const mongoose = require("mongoose");
+const connectDB = require("../db");
 const Exhibition = require("../models/Exhibition");
 const Favorite = require("../models/Favorite");
 const User = require("../models/User");
 const NotificationLog = require("../models/NotificationLog");
 const nodemailer = require("nodemailer");
 const dayjs = require("dayjs");
+const fs = require("fs");
 
-// ✅ เชื่อม MongoDB (hardcoded ชั่วคราว)
-const MONGO_URI = "mongodb+srv://inspiraproject2025:ypLEu0xL3plfo2AW@exhibition-cluster.ty3ugcy.mongodb.net/exhibition_db";
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log("✅ Connected to MongoDB");
-}).catch((err) => {
-  console.error("❌ MongoDB connection error:", err);
-});
-
-// ⚙️ แปลงวันที่ภาษาไทย → ISO
-const thaiMonths = {
-  'มกราคม': '01', 'กุมภาพันธ์': '02', 'มีนาคม': '03', 'เมษายน': '04',
-  'พฤษภาคม': '05', 'มิถุนายน': '06', 'กรกฎาคม': '07', 'สิงหาคม': '08',
-  'กันยายน': '09', 'ตุลาคม': '10', 'พฤศจิกายน': '11', 'ธันวาคม': '12'
-};
-
-function parseThaiDateToISO(str) {
-  if (dayjs(str, "YYYY-MM-DD", true).isValid()) {
-    return str;
-  }
-  const match = str?.match(/(\d{1,2}) ([ก-๙]+) (\d{4})/);
-  if (!match) return null;
-  const [_, d, m, y] = match;
-  const mm = thaiMonths[m];
-  if (!mm) return null;
-  return `${y}-${mm}-${d.padStart(2, "0")}`;
-}
-
-// 📧 ตั้งค่า SMTP สำหรับส่งอีเมล
+// ✅ Gmail SMTP
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -44,7 +18,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-
 async function sendEmail(to, subject, text) {
   await transporter.sendMail({
     from: `"นิทรรศการแจ้งเตือน" <${process.env.EMAIL_USERNAME}>`,
@@ -54,44 +27,64 @@ async function sendEmail(to, subject, text) {
   });
 }
 
-// 🔔 ฟังก์ชันหลัก: ตรวจสอบนิทรรศการใกล้จบ
+// 🔔 ฟังก์ชันหลัก
 async function notifyEndingSoon() {
+  await connectDB();
+  console.log("✅ Connected to MongoDB");
+
   const today = dayjs();
   const threeDaysLater = today.add(3, "day");
-  const exhibitions = await Exhibition.find({ end_date: { $exists: true } });
 
-  for (const ex of exhibitions) {
-    const isoEndDate = parseThaiDateToISO(ex.end_date);
-    if (!isoEndDate) continue;
+  console.log("📌 กำลังดึงรายการ Favorite...");
+  const favorites = await Favorite.find({});
 
-    const endDate = dayjs(isoEndDate);
-    if (!endDate.isValid() || endDate.isAfter(threeDaysLater)) continue;
+  for (const fav of favorites) {
+    const user = await User.findById(fav.user_id);
+    if (!user || !user.email) {
+      console.log("⚠️ ข้าม: user ไม่มีอีเมลหรือไม่พบ", fav.user_id);
+      continue;
+    }
+
+    const ex = await Exhibition.findById(fav.exhibition_id);
+    if (!ex || !ex.end_date_obj) {
+      console.log("⚠️ ข้าม: ไม่พบงานหรือไม่มี end_date_obj:", fav.exhibition_id);
+      continue;
+    }
+
+    const endDate = dayjs(ex.end_date_obj);
+    if (!endDate.isValid()) {
+      console.log("⚠️ ข้าม: end_date_obj ไม่ valid:", ex.title);
+      continue;
+    }
+
+    if (endDate.isAfter(threeDaysLater)) {
+      console.log("⚠️ ข้าม: งานยังไม่ใกล้จบ:", ex.title, endDate.format("YYYY-MM-DD"));
+      continue;
+    }
+
+    const alreadySent = await NotificationLog.findOne({
+      user_id: user._id,
+      exhibition_id: ex._id,
+    });
+    if (alreadySent) {
+      console.log("📭 ข้าม: เคยแจ้งแล้ว:", ex.title, "|", user.email);
+      continue;
+    }
 
     const formattedDate = endDate.format("D MMMM YYYY");
-    const favUsers = await Favorite.find({ exhibition_id: ex._id }).distinct("user_id");
+    const msg = `📅 แจ้งเตือน: นิทรรศการ "${ex.title}" ที่คุณบันทึกไว้ในรายการโปรด กำลังจะจบในวันที่ ${formattedDate}\n\nดูรายละเอียดเพิ่มเติม:\n${process.env.BASE_URL}/exhibition.html?id=${ex._id}`;
 
-    for (const userId of favUsers) {
-      const user = await User.findById(userId);
-      if (!user || !user.email) continue;
-
-      const alreadySent = await NotificationLog.findOne({
-        user_id: new mongoose.Types.ObjectId(userId),
-        exhibition_id: new mongoose.Types.ObjectId(ex._id),
-      });
-      if (alreadySent) continue;
-
-      const msg = `📅 แจ้งเตือน: นิทรรศการ "${ex.title}" ที่คุณบันทึกไว้ในรายการโปรด กำลังจะจบในวันที่ ${formattedDate}\n\nดูรายละเอียดเพิ่มเติม:\n${process.env.BASE_URL}/exhibition.html?id=${ex._id}`;
-
-      try {
-        await sendEmail(user.email, `แจ้งเตือน: นิทรรศการใกล้จบ`, msg);
-        await NotificationLog.create({ user_id: userId, exhibition_id: ex._id });
-        console.log(`📧 ส่งให้ ${user.email} | ${ex.title}`);
-      } catch (err) {
-        console.error(`❌ ส่งอีเมลล้มเหลวให้ ${user.email}`, err);
-      }
+    try {
+      await sendEmail(user.email, `แจ้งเตือน: นิทรรศการใกล้จบ`, msg);
+      await NotificationLog.create({ user_id: user._id, exhibition_id: ex._id });
+      console.log(`📧 ส่งให้ ${user.email} | ${ex.title}`);
+    } catch (err) {
+      console.error(`❌ ส่งอีเมลล้มเหลวให้ ${user.email}`, err);
     }
   }
+
+  fs.appendFileSync("notify_log.txt", `✅ แจ้งเตือนเมื่อ ${new Date().toISOString()}\n`);
 }
 
-// 🟢 เรียกทันทีเมื่อ GitHub Actions รัน
+// ▶️ เรียกฟังก์ชัน
 notifyEndingSoon();

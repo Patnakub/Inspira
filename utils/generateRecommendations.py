@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from datetime import datetime
 import sys
 import time
+sys.stdout.reconfigure(encoding='utf-8')
 
 start_time = time.time()
 
@@ -65,8 +66,7 @@ bulk_data = []
 # 📌 Generate New Recommendations
 # --------------------------
 for i, user in users_df.iterrows():
-    if i % 10 == 0:
-        print(f"🔄 กำลังประมวลผลผู้ใช้ {i+1}/{len(users_df)}")
+    print(f" กำลังประมวลผลผู้ใช้ {i+1}/{len(users_df)}")
 
     user_id = user['user_id']
     similarities = similarity_matrix[i]

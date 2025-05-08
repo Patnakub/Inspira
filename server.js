@@ -50,14 +50,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // ✅ Connect MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("✅ Connected to MongoDB Cloud");
-    syncExhibitionsToElasticsearch();
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
-  });
+const connectDB = require('./db');
+
+connectDB().then(() => {
+  syncExhibitionsToElasticsearch();
+});
+
 
 
 // 🔁 เรียกใช้ cron แจ้งเตือนนิทรรศการใกล้จบ
