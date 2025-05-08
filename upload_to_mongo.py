@@ -24,11 +24,11 @@ collection = db[COLLECTION_NAME]
 # -----------------------
 files = glob.glob(os.path.join(MERGE_DIR, "merged_*.json"))
 if not files:
-    print("❌ ไม่พบไฟล์ merged_*.json ใน merge_data/")
+    print("No merged_*.json files found in merge_data/")
     exit(1)
 
 latest_file = max(files, key=os.path.getmtime)
-print(f"📄 ใช้ไฟล์: {os.path.basename(latest_file)}")
+print(f"Use file: {os.path.basename(latest_file)}")
 
 # -----------------------
 # Load data from JSON
@@ -36,7 +36,7 @@ print(f"📄 ใช้ไฟล์: {os.path.basename(latest_file)}")
 with open(latest_file, "r", encoding="utf-8") as f:
     data = json.load(f)
 
-print(f"📦 โหลดข้อมูลทั้งหมด {len(data)} รายการ")
+print(f"Load all {len(data)} items")
 
 # -----------------------
 # Insert or Update
@@ -98,4 +98,4 @@ for item in data:
         else:
             skipped += 1
 
-print(f"✅ เพิ่มใหม่: {inserted} | อัปเดต: {updated} | ข้าม: {skipped}")
+print(f"New added: {inserted} | Updated: {updated} | Skipped: {skipped}")

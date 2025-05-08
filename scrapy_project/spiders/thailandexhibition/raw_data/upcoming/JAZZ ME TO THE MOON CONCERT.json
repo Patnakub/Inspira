@@ -1,0 +1,26 @@
+{
+    "title": "JAZZ ME TO THE MOON CONCERT",
+    "description": "ONE BANGKOK PRESENTS JAZZ ME TO THE MOON CONCERT เปิดปรากฎการณ์คอนเสิร์ตเหนือจินตนาการ ทะยานสู่ดวงจันทร์ กับที่สุดของจักรวาลเพลงเพราะ ที่สุดของศิลปิน Star Travelers• THE TOYS• VIOLETTE WAUTIER• D GERRARD• THE PARKINSONร่วมกับที่สุดของวง The Orchestra Jazz Band  เตรียมขึ้นยานท่องจักรวาล ไปกับประสบการณ์สุดพิเศษในค่ำคืนเหนือจินตนาการไปด้วยกันเปิดจำหน่ายบัตร Early Bird และใช้โค้ดส่วนลดได้ตั้งแต่วันที่ 6 - 8 พฤษภาคม 2568 เวลา 10.00-23.59 น.พิเศษรอบ Early Bird รับส่วนลด 20% เมื่อใช้โค้ดส่วนลด: JAZZME20ราคาบัตร Early Bird: 3,200 THB (Regular 4,000 THB)2,800 THB (Regular 3,500 THB) 2,400 THB (Regular 3,000 THB) 2,000 THB (Regular 2,500 THB) 1,600 THB (Regular 2,000 THB) วันแสดง : วันเสาร์ที่ 19 กรกฎาคม 2568(เริ่มการแสดงเวลา 19:00 น.) ONE BANGKOK FORUM",
+    "categories": [
+        "Concert"
+    ],
+    "start_date": "19 กรกฎาคม 2025",
+    "end_date": "19 กรกฎาคม 2025",
+    "event_slot_time": null,
+    "location": "วัน แบงค็อก - One Bangkok",
+    "url": "https://www.facebook.com/jazzmeconcert",
+    "cover_picture": "https://api.thailandexhibition.com/uploads/3_30_Early_Bird_20_bf9e0035e8.jpg",
+    "ticket": "มีค่าเข้าชม",
+    "ticket_price": [
+        1600,
+        2400,
+        2800,
+        3000,
+        3200,
+        3500,
+        4000
+    ],
+    "reliability_score": 2,
+    "timestamp": "2025-05-08 20:04:01",
+    "status": "upcoming"
+}

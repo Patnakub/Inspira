@@ -11,7 +11,7 @@ def process_json_file(file_path):
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        # ตรวจสอบว่าเป็น list หรือ dict
+        # Check if it's a list or dict
         if isinstance(data, list) and len(data) > 0:
             title = data[0].get("title", "")
             for d in data:
@@ -20,40 +20,40 @@ def process_json_file(file_path):
             title = data.get("title", "")
             data["original_filename"] = os.path.basename(file_path)
         else:
-            print(f"❌ ไม่มีข้อมูล title ในไฟล์: {file_path}")
+            print(f"Missing title field in file: {file_path}")
             return
 
         if not title:
-            print(f"❌ ไม่มี title สำหรับ hash: {file_path}")
+            print(f"No title found for hashing: {file_path}")
             return
 
-        # สร้างชื่อไฟล์ใหม่จาก hash
+        # Generate new filename from hash
         new_name = hash_filename(title)
         new_path = os.path.join(os.path.dirname(file_path), new_name)
 
-        # เขียนไฟล์ใหม่ (เขียนทับชื่อใหม่)
+        # Write file with new name
         with open(new_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
-        # ลบไฟล์เดิมถ้าชื่อไม่เหมือน
+        # Remove original file if names differ
         if os.path.abspath(new_path) != os.path.abspath(file_path):
             os.remove(file_path)
 
-        print(f"✅ {os.path.basename(file_path)} → {new_name}")
+        print(f"{os.path.basename(file_path)} renamed to {new_name}")
 
     except Exception as e:
-        print(f"❌ Error processing {file_path}: {e}")
+        print(f"Error processing {file_path}: {e}")
 
-# 🔍 กำหนด path พื้นฐาน
+# Base folders and target mode
 base_folders = ["./scrapy_project/spiders"]
-modes = ["upcoming"]
+modes = ["upcoming"]  # Only rename upcoming files
 
 for base in base_folders:
     for mode in modes:
         target_path = os.path.join(base, "**", "raw_data", mode, "*.json")
         json_files = glob(target_path, recursive=True)
 
-        print(f"\n📂 Processing {len(json_files)} files in {mode} mode")
+        print(f"\nProcessing {len(json_files)} files in {mode} mode")
 
         for file_path in json_files:
             process_json_file(file_path)

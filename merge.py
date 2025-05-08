@@ -11,6 +11,8 @@ from datetime import datetime
 import re
 import requests
 import time
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 
 # ------------------------
@@ -174,14 +176,14 @@ def load_all_json(base_path, mode="full"):
 
     for root, dirs, files in os.walk(base_path):
         target_dir = os.path.join(root, "raw_data", mode)
-        print(f"🔍 Looking in: {target_dir}")
+        print(f" Looking in: {target_dir}")
 
         if os.path.exists(target_dir):
             json_files = glob(os.path.join(target_dir, "*.json"))
-            print(f"📦 Found {len(json_files)} JSON files")
+            print(f" Found {len(json_files)} JSON files")
 
             for file in json_files:
-                print(f"📄 Reading: {file}")
+                print(f" Reading: {file}")
                 try:
                     with open(file, "r", encoding="utf-8") as f:
                         data = json.load(f)
@@ -193,9 +195,9 @@ def load_all_json(base_path, mode="full"):
                             data["source_file"] = file
                             all_data.append(data)
                 except Exception as e:
-                    print(f"❌ Error reading {file}: {e}")
+                    print(f" Error reading {file}: {e}")
         else:
-            print(f"🚫 Not found: {target_dir}")
+            print(f" Not found: {target_dir}")
     return all_data
 
 # ------------------------
@@ -227,12 +229,12 @@ def filter_clean_events(events):
 # ------------------------
 def merge_similar_events(all_events, eps=eps, min_samples=1):
     if not all_events:
-        print("⚠️ ไม่มีข้อมูลที่จะ merge")
+        print("There is no data to merge.")
         return []
 
     titles = [event.get("title", "") for event in all_events if event.get("title")]
     if not titles:
-        print("⚠️ ไม่มี title ให้ clustering")
+        print("No title for clustering")
         return []
 
     vectorizer = TfidfVectorizer()
@@ -259,27 +261,27 @@ def merge_similar_events(all_events, eps=eps, min_samples=1):
 # ------------------------
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("❌ โปรดระบุ mode ด้วย --mode=full หรือ --mode=upcoming")
+        print("Please specify mode with --mode=full or --mode=upcoming.")
         sys.exit(1)
 
     mode_arg = sys.argv[1]
     if mode_arg.startswith("--mode="):
         mode = mode_arg.split("=")[1].lower()
     else:
-        print("❌ รูปแบบพารามิเตอร์ไม่ถูกต้อง ควรใช้ --mode=full หรือ --mode=upcoming")
+        print("Parameter format is invalid. Use --mode=full or --mode=upcoming.")
         sys.exit(1)
 
-    print(f"🚀 เริ่ม Merge Mode: {mode}")
+    print(f"Merge Mode: {mode}")
 
     all_json_data = load_all_json(base_path, mode=mode)
-    print(f"📦 โหลดข้อมูลทั้งหมด {len(all_json_data)} รายการจาก '{mode}'")
+    print(f" Load all {len(all_json_data)} items from '{mode}'")
 
     valid_json_data = filter_valid_events(all_json_data)
     cleaned_json_data = filter_clean_events(valid_json_data)
-    print(f"✅ ข้อมูลหลังกรอง title/source_file: {len(cleaned_json_data)} รายการ")
+    print(f"Data after filtering title/source_file: {len(cleaned_json_data)} items")
 
     merged_data = merge_similar_events(cleaned_json_data)
-    print(f"✅ เหลือข้อมูลหลัง merge แล้ว: {len(merged_data)} รายการ")
+    print(f"Remaining data after merge: {len(merged_data)} items")
     # ✅ ทำความสะอาดข้อมูลก่อนเซฟ
     df = pd.DataFrame(merged_data)
 
@@ -441,9 +443,9 @@ if __name__ == "__main__":
                 time.sleep(0.3)  # ปลอดภัยกว่ากับหลายรายการ
                 return {"lat": lat, "lon": lon}
             else:
-                print(f"❌ [Google] ไม่พบพิกัดสำหรับ '{location}' | Status: {data['status']}")
+                print(f"[Google] No coordinates found for '{location}' | Status: {data['status']}")
         except Exception as e:
-            print(f"❌ [Google] เกิดข้อผิดพลาดกับ '{location}': {e}")
+            print(f"[Google] An error occurred with '{location}': {e}")
 
         # ถ้าไม่เจอให้เก็บเป็น None
         geocode_cache[location] = None
@@ -471,9 +473,9 @@ if __name__ == "__main__":
                 time.sleep(0.3)
                 return {"lat": lat, "lon": lon}
             else:
-                print(f"❌ [Places API] ไม่พบพิกัดสำหรับ '{location}' | Status: {data['status']}")
+                print(f"[Places API] No coordinates found for '{location}' | Status: {data['status']}")
         except Exception as e:
-            print(f"❌ [Places API] เกิดข้อผิดพลาดกับ '{location}': {e}")
+            print(f"[Places API] Error with '{location}': {e}")
 
         geocode_cache[location] = None
         return None
@@ -502,7 +504,7 @@ if __name__ == "__main__":
                 time.sleep(1)
                 return {"lat": lat, "lon": lon}
         except Exception as e:
-            print(f"❌ [Nominatim] เกิดข้อผิดพลาดกับ '{location}': {e}")
+            print(f"[Nominatim] An error occurred with '{location}': {e}")
         
         geocode_cache[location] = None
         return None
@@ -547,7 +549,7 @@ if __name__ == "__main__":
         json.dump(geocode_cache, f, ensure_ascii=False, indent=2)
 
     # 🧹 สรุปผล
-    print(f"🧹 ทำความสะอาดข้อมูลเสร็จสิ้น เหลือ {len(df)} รายการ")
+    print(f"Data cleaning completed, leaving {len(df)} items.")
 
     output_all_path = os.path.join(output_dir, f"merged_{mode}_{timestamp_str}.json")
 
@@ -571,7 +573,7 @@ if __name__ == "__main__":
     # 3. บันทึกไฟล์ JSON เดียวเหมือนเดิม
     with open(output_all_path, "w", encoding="utf-8") as f:
         json.dump(df_export.to_dict(orient="records"), f, ensure_ascii=False, indent=2)
-        print(f"📁 บันทึกข้อมูลทั้งหมดหลัง merge ที่: {output_all_path}")
+        print(f"Save all data after merge to: {output_all_path}")
 
 # ครั้งแรก (รวม full)
 # python merge.py --mode=full
