@@ -10,7 +10,7 @@ const syncExhibitionToElastic = async (exhibition) => {
     await elasticClient.index({
       index: 'exhibitions_th',
       id: exhibition._id.toString(),
-      document: {
+      body : {
         title: exhibition.title,
         description: exhibition.description,
       },

@@ -56,13 +56,6 @@ connectDB().then(() => {
   syncExhibitionsToElasticsearch();
 });
 
-
-
-// 🔁 เรียกใช้ cron แจ้งเตือนนิทรรศการใกล้จบ
-require('./cron/notifyEndingExhibitions');
-require('./cron/recommend_cron');
-
-
 // ✅ Mount routes
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
