@@ -98,14 +98,17 @@ module.exports = async function normalizeExhibitionData(req, res, next) {
     // ✅ เติมพิกัดถ้ายังไม่มี (โดย fallback ไปแปลงจาก location)
     if (!exhibition.latitude || !exhibition.longitude) {
       const coords = await getLatLonWithFallback(exhibition.location);
-      if (!coords) {
-        return res.status(400).json({ message: "Missing coordinates" });
-      }
-      exhibition.latitude = coords.lat;
-      exhibition.longitude = coords.lon;
 
-      await exhibition.save();
+      if (coords) {
+        exhibition.latitude = coords.lat;
+        exhibition.longitude = coords.lon;
+        await exhibition.save();
+      } else {
+        console.warn("⚠️ ไม่สามารถหา coordinates ได้สำหรับ:", exhibition.title);
+        // อย่าตัด request ทิ้ง — ปล่อยให้ผ่านต่อไป
+      }
     }
+
 
     // ✅ ผูกไว้ให้ controller ใช้งาน
     req.exhibition = exhibition;

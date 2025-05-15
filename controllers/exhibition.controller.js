@@ -170,7 +170,9 @@ exports.getNearbyBusStops = async (req, res) => {
 
     const exLat = parseFloat(exhibition.latitude);
     const exLon = parseFloat(exhibition.longitude);
-    if (isNaN(exLat) || isNaN(exLon)) return res.status(400).json({ message: 'Missing coordinates' });
+    if (isNaN(exLat) || isNaN(exLon)) {
+      return res.json([]); // หรือส่ง stops ว่างเฉย ๆ
+    }
 
     const busStops = await BusStop.find({});
     const nearby = [];
