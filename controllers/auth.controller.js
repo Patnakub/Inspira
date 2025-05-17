@@ -66,7 +66,7 @@ const register = async (req, res) => {
       },
     });
 
-    const clientBaseUrl = process.env.CLIENT_BASE_URL || "http://localhost:3000";
+    const clientBaseUrl = process.env.CLIENT_BASE_URL || "https://inspirafe123.ap.ngrok.io";
     const verifyLink = `${clientBaseUrl}/verify-email?token=${token}`;
     const mailOptions = {
       from: process.env.EMAIL_USERNAME,
@@ -128,7 +128,7 @@ const resendVerification = async (req, res) => {
     user.verifyTokenExpire = new Date(Date.now() + 24 * 60 * 60 * 1000);
     await user.save();
 
-    const clientBaseUrl = process.env.CLIENT_BASE_URL || "http://localhost:3000";
+    const clientBaseUrl = process.env.CLIENT_BASE_URL || "https://inspirafe123.ap.ngrok.io";
     const verifyLink = `${clientBaseUrl}/verify-email?token=${token}`;
 
     const mailOptions = {
