@@ -1,7 +1,7 @@
 const getDistance = require("../utils/haversine");
 const fs = require("fs");
 const path = require("path");
-
+const axios = require("axios");
 const stopsPath = path.join(__dirname, "../gtfs/stops.txt");
 const stopTimesPath = path.join(__dirname, "../gtfs/stop_times.txt");
 const tripsPath = path.join(__dirname, "../gtfs/trips.txt");
@@ -85,25 +85,26 @@ function canTravelBetweenStopsOnSameRoute(routeId, startStopId, endStopId) {
   return tripsWithStart.size > 0 && tripsWithEnd.size > 0;
 }
 
-exports.suggestRoute = (req, res) => {
+exports.suggestRoute = async (req, res) => {
   try {
     const { lat, lng, exLat, exLng } = req.query;
-    const { userStops } = req.body || {};
 
-    if (!exLat || !exLng || (!userStops && (!lat || !lng))) {
-      return res.status(400).json({ error: "Missing required data" });
+    if (!lat || !lng || !exLat || !exLng) {
+      return res.status(400).json({ error: "Missing lat/lng" });
     }
 
-    if (userStops) {
-      return suggestCore(userStops, { lat: exLat, lng: exLng }, res);
-    } else {
-      return suggestCore({ lat, lng }, { lat: exLat, lng: exLng }, res);
-    }
+    const apiKey = process.env.GOOGLE_API_KEY;
+    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${lat},${lng}&destination=${exLat},${exLng}&mode=transit&alternatives=true&language=th&key=${apiKey}`;
+    const response = await axios.get(url);
+
+    return res.json(response.data);
   } catch (err) {
-    console.error("❌ Internal error in suggestRoute:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("❌ Google API error:", err.message);
+    return res.status(500).json({ error: "ไม่สามารถเรียก Google Directions ได้" });
   }
 };
+
+
 
 
 exports.getAllStops = (req, res) => {
@@ -122,8 +123,16 @@ exports.suggestRouteFromStops = (req, res) => {
   if (!Array.isArray(userStops) || !exLat || !exLng) {
     return res.status(400).json({ error: "ยังไม่มีข้อมูลสถานที่นี้" });
   }
-  return exports.suggestRoute(req, res);
+
+  const userInput = userStops; // array of stop_id
+  const exhibition = {
+    lat: parseFloat(exLat),
+    lng: parseFloat(exLng)
+  };
+
+  return suggestCore(userInput, exhibition, res);
 };
+
 
 function suggestCore(userInput, exhibition, res) {
   const exhibitionNearby = findNearbyStops(exhibition.lat, exhibition.lng, 100)

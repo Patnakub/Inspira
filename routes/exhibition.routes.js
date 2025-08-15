@@ -19,6 +19,8 @@ router.get('/:id/nearby-bus', exhibitionController.getNearbyBusStops);
 // ✅ ดึงนิทรรศการตาม ID พร้อม normalize
 router.get('/:id', normalizeExhibitionData, exhibitionController.getExhibitionById);
 
+// ✅ ดึงข้อมูลป้ายรถเมล์ตามนิทรรศการจาก gg
+router.get('/:id/google-bus-stops', exhibitionController.getNearbyBusStopsViaGoogle);
 
 
 module.exports = router;

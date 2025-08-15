@@ -1,5 +1,6 @@
 const Exhibition = require('../models/Exhibition');
 const elasticClient = require('../utils/elasticClient');
+const axios = require('axios');
 
 exports.getAllExhibitions = async (req, res) => {
   try {
@@ -201,6 +202,41 @@ exports.getNearbyBusStops = async (req, res) => {
     res.json(nearby.slice(0, 10));
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.getNearbyBusStopsViaGoogle = async (req, res) => {
+  try {
+    const exhibition = await Exhibition.findById(req.params.id);
+    if (!exhibition || !exhibition.latitude || !exhibition.longitude) {
+      return res.status(404).json({ message: 'Exhibition not found or missing coordinates' });
+    }
+
+    const apiKey = process.env.GOOGLE_API_KEY;
+    const lat = exhibition.latitude;
+    const lng = exhibition.longitude;
+
+    const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
+      params: {
+        location: `${lat},${lng}`,
+        radius: 700,
+        type: 'transit_station',
+        key: apiKey
+      }
+    });
+
+    const results = response.data.results.map(place => ({
+      name: place.name,
+      lat: place.geometry.location.lat,
+      lng: place.geometry.location.lng,
+      place_id: place.place_id,
+      icon: place.icon
+    }));
+
+    res.json(results);
+  } catch (err) {
+    console.error('❌ Google Places API error:', err.message);
+    res.status(500).json({ message: 'Failed to fetch from Google Places API' });
   }
 };
 
