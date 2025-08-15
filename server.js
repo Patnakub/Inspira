@@ -24,24 +24,27 @@ const app = express();
 // ✅ CORS setup
 const allowedOrigins = [
   'http://localhost:3000',
+  'http://localhost:3001', 
+  'http://127.0.0.1:3000',
   'http://127.0.0.1:5500',
   'http://localhost:5500',
   'http://localhost:5000',
-  'http://127.0.0.1:5000',
-  'https://inspirafe123.ap.ngrok.io',
-  'https://exhibitionapi123.ap.ngrok.io'
+  'http://127.0.0.1:5000'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // อนุญาติ requests ที่ไม่มี origin (เช่น mobile apps, Postman)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.warn(`❌ Blocked by CORS: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
