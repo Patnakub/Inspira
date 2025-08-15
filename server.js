@@ -80,6 +80,111 @@ app.get('/verify_success', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'verify_success.html'));
 });
 
+// ✅ เพิ่มส่วนนี้หลังจากบรรทัดด้านบน
+app.get('/verify-email', async (req, res) => {
+  const { token } = req.query;
+  
+  if (!token) {
+    return res.status(400).send(`
+      <!DOCTYPE html>
+      <html><head><title>Error</title></head>
+      <body style="font-family: sans-serif; text-align: center; margin-top: 100px;">
+        <h2>❌ ลิงก์ไม่ถูกต้อง</h2>
+        <p>กรุณาตรวจสอบลิงก์ในอีเมลอีกครั้ง</p>
+        <a href="/login.html">กลับไปหน้า Login</a>
+      </body></html>
+    `);
+  }
+
+  try {
+    const User = require('./models/User');
+    
+    const user = await User.findOne({
+      verifyToken: token,
+      verifyTokenExpire: { $gt: new Date() }
+    });
+
+    if (!user) {
+      return res.status(400).send(`
+        <!DOCTYPE html>
+        <html><head><title>Token หมดอายุ</title></head>
+        <body style="font-family: sans-serif; text-align: center; margin-top: 100px;">
+          <h2>❌ ลิงก์หมดอายุหรือไม่ถูกต้อง</h2>
+          <p>กรุณาสมัครสมาชิกใหม่หรือขออีเมลยืนยันใหม่</p>
+          <a href="/register.html">สมัครสมาชิกใหม่</a>
+        </body></html>
+      `);
+    }
+
+    // อัพเดตสถานะผู้ใช้
+    user.isEmailVerified = true;
+    user.verifyToken = null;
+    user.verifyTokenExpire = null;
+    await user.save();
+
+    // แสดงหน้าสำเร็จ
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>ยืนยันอีเมลสำเร็จ</title>
+        <style>
+          body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            margin-top: 100px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+          }
+          .container {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+          }
+          .success-icon { font-size: 60px; margin-bottom: 20px; }
+          .btn {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+          }
+          .btn:hover { background: #45a049; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="success-icon">✅</div>
+          <h2>ยืนยันอีเมลสำเร็จ!</h2>
+          <p>ขอบคุณ <strong>${user.username}</strong><br>
+          คุณสามารถเข้าสู่ระบบได้แล้ว</p>
+          <a href="/login.html" class="btn">เข้าสู่ระบบ</a>
+        </div>
+      </body>
+      </html>
+    `);
+
+  } catch (err) {
+    console.error('❌ Email verification error:', err);
+    res.status(500).send(`
+      <!DOCTYPE html>
+      <html><head><title>เกิดข้อผิดพลาด</title></head>
+      <body style="font-family: sans-serif; text-align: center; margin-top: 100px;">
+        <h2>❌ เกิดข้อผิดพลาดในระบบ</h2>
+        <p>กรุณาลองใหม่อีกครั้งหรือติดต่อผู้ดูแลระบบ</p>
+        <a href="/register.html">กลับไปหน้าสมัครสมาชิก</a>
+      </body></html>
+    `);
+  }
+});
+
 // ✅ Serve all .html pages in /public dynamically
 app.get('/:file', (req, res, next) => {
   const file = req.params.file;
